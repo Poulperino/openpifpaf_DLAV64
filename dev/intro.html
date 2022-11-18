@@ -554,18 +554,18 @@ animal parts to provide a holistic perception framework that is well suited for
 urban mobility such as self-driving cars and delivery robots.</p>
 </div></blockquote>
 <p>Previous <a class="reference external" href="http://openaccess.thecvf.com/content_CVPR_2019/html/Kreiss_PifPaf_Composite_Fields_for_Human_Pose_Estimation_CVPR_2019_paper.html">CVPR 2019 paper</a>.</p>
-<p>This project was forked from <a class="reference external" href="https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1">OpenPifPaf v0.13.1</a> and developed separately from version v0.14.0 on.</p>
+<p>Have fun with <a class="reference external" href="https://vitademo.epfl.ch/movements/">our latest real-time interactive demo</a>!</p>
 <section id="demo">
 <h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">#</a></h2>
 <p><img alt="example image with overlaid pose predictions" src="_images/000000081988.jpg.predictions.jpeg" /></p>
 <p>Image credit: “<a class="reference external" href="https://www.flickr.com/photos/fotologic/6038911779/in/photostream/">Learning to surf</a>” by fotologic which is licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.<br />
-Created with</p>
+Created with:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m openpifpaf.predict docs/coco/000000081988.jpg --image-output
 </pre></div>
 </div>
 <p><img alt="example image with overlaid wholebody pose predictions" src="https://raw.githubusercontent.com/vita-epfl/openpifpaf/main/docs/soccer.jpeg.predictions.jpeg" />
 Image credit: <a class="reference external" href="https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg">Photo</a> by <a class="reference external" href="https://commons.wikimedia.org/wiki/User:Lokomotive74">Lokomotive74</a> which is licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>.<br />
-Created with</p>
+Created with:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m openpifpaf.predict docs/wholebody/soccer.jpeg --checkpoint<span class="o">=</span>shufflenetv2k30-wholebody --line-width<span class="o">=</span><span class="m">2</span> --image-output
 </pre></div>
 </div>
@@ -582,6 +582,7 @@ Created with</p>
 <h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">#</a></h2>
 <p>This version of OpenPifPaf (<code class="docutils literal notranslate"><span class="pre">openpifpaf-vita</span></code>) cannot co-exist with the original one (<a class="reference external" href="https://github.com/openpifpaf/openpifpaf"><code class="docutils literal notranslate"><span class="pre">openpifpaf</span></code></a>) in the same environment.
 If you have previously installed the package <code class="docutils literal notranslate"><span class="pre">openpifpaf</span></code>, remove it before installation to avoid conflicts.</p>
+<p>This project was forked from <a class="reference external" href="https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1">OpenPifPaf v0.13.1</a> and developed separately from version v0.14.0 on.</p>
 <p>Do not clone this repository.
 Make sure there is no folder named <code class="docutils literal notranslate"><span class="pre">openpifpaf-vita</span></code> in your current directory, and run:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3 install openpifpaf-vita
