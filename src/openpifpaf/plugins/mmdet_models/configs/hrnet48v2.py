@@ -27,4 +27,8 @@ model = dict(
                 num_blocks=(4, 4, 4, 4),
                 num_channels=(48, 96, 192, 384))),
         init_cfg=dict(
-            type='Pretrained', checkpoint='open-mmlab://msra/hrnetv2_w48')),)
+            type='Pretrained', checkpoint='open-mmlab://msra/hrnetv2_w48')),
+    neck_det=dict(
+        type='HRFPN',
+        in_channels=[48, 96, 192, 384],
+        out_channels=256,))

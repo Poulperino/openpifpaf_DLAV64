@@ -29,12 +29,11 @@ class MMDet_Models(openpifpaf.network.BaseNetwork):
 
     def forward(self, x):
         x = self.backbone(x)
-
         if self.neck_det is None:
             return x
-        elif self.nect_rel is None:
+        elif self.neck_rel is None:
             det_feats = self.neck_det(x)
-            return det_feats 
+            return det_feats[0]
         else:
             det_feats = self.neck_det(x)
             rel_feats = self.neck_rel(x)
