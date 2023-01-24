@@ -3,7 +3,6 @@ import logging
 import math
 
 import torch
-
 LOG = logging.getLogger(__name__)
 
 
@@ -443,3 +442,62 @@ class SmoothL1:
 
         self.scale = None
         return torch.sum(losses)
+
+def _ciou(bboxes1, bboxes2):
+    rows = bboxes1.shape[0]
+    cols = bboxes2.shape[0]
+    cious = torch.zeros((rows, cols))
+    if rows * cols == 0:
+        return cious
+    w1 = bboxes1[:, 2]
+    h1 = bboxes1[:, 3]
+    w2 = bboxes2[:, 2]
+    h2 = bboxes2[:, 3]
+    area1 = w1 * h1
+    area2 = w2 * h2
+    center_x1 = bboxes1[:, 0]
+    center_y1 = bboxes1[:, 1]
+    center_x2 = bboxes2[:, 0]
+    center_y2 = bboxes2[:, 1]
+
+    inter_l = torch.max(center_x1 - w1 / 2,center_x2 - w2 / 2)
+    inter_r = torch.min(center_x1 + w1 / 2,center_x2 + w2 / 2)
+    inter_t = torch.max(center_y1 - h1 / 2,center_y2 - h2 / 2)
+    inter_b = torch.min(center_y1 + h1 / 2,center_y2 + h2 / 2)
+    inter_area = torch.clamp((inter_r - inter_l),min=0) * torch.clamp((inter_b - inter_t),min=0)
+
+    c_l = torch.min(center_x1 - w1 / 2,center_x2 - w2 / 2)
+    c_r = torch.max(center_x1 + w1 / 2,center_x2 + w2 / 2)
+    c_t = torch.min(center_y1 - h1 / 2,center_y2 - h2 / 2)
+    c_b = torch.max(center_y1 + h1 / 2,center_y2 + h2 / 2)
+
+    inter_diag = (center_x2 - center_x1)**2 + (center_y2 - center_y1)**2
+    c_diag = torch.clamp((c_r - c_l),min=0)**2 + torch.clamp((c_b - c_t),min=0)**2
+
+    union = area1+area2-inter_area
+    u = (inter_diag) / c_diag
+    iou = inter_area / union
+    v = (4 / (math.pi ** 2)) * torch.pow((torch.atan(w2 / h2) - torch.atan(w1 / h1)), 2)
+    with torch.no_grad():
+        S = (iou>0.5).float()
+        alpha= S*v/(1-iou+v)
+    cious = iou - u - alpha * v
+    cious = torch.clamp(cious,min=-1.0,max = 1.0)
+    return cious
+
+class ComboIOUL1(torch.nn.Module):
+    lambdas = [1.0, 1.0]
+    def __init__(self, lambdas=[1.0, 1.0]):
+        super(ComboIOUL1, self).__init__()
+        self.lambdas = lambdas
+
+    def __call__(self, x_regs, t_regs, t_sigma_min, t_scales):
+        # x_regs = x_regs.reshape(t_regs.shape[0], t_regs.shape[1] // 2, 2)
+        # t_regs = t_regs.reshape(t_regs.shape[0], t_regs.shape[1] // 2, 2)
+
+        d = x_regs - t_regs
+        d = torch.linalg.norm(d, ord=2, dim=1, keepdim=True)
+
+        ciou_loss = (1 - _ciou(x_regs, t_regs))
+        ciou_loss = ciou_loss #/ (t_regs.shape[0] + 1e-4)
+        return self.lambdas[0]*d + self.lambdas[1]*ciou_loss.unsqueeze(-1)

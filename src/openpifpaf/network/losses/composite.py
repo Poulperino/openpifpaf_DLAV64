@@ -4,9 +4,13 @@ import logging
 import torch
 
 from . import components
-
+import numpy as np
 LOG = logging.getLogger(__name__)
 
+def index_field(shape):
+    yx = np.indices(shape, dtype=np.float32)
+    xy = np.flip(yx, axis=0)
+    return xy
 
 class CompositeLossByComponent(torch.nn.Module):
     """Default loss until v0.12"""
@@ -198,6 +202,9 @@ class CompositeLoss(torch.nn.Module):
     """Default loss since v0.13"""
 
     soft_clamp_value = 5.0
+    combo_IOUL1 = False
+    combo_IOUL1_lambdas = [1.0, 1.0]
+    use_bce = False
 
     def __init__(self, head_meta):
         super().__init__()
@@ -214,8 +221,15 @@ class CompositeLoss(torch.nn.Module):
             '{}.{}.scales'.format(head_meta.dataset, head_meta.name),
         )
 
-        self.bce_loss = components.BceL2()
-        self.reg_loss = components.RegressionLoss()
+        if self.use_bce:
+            self.bce_loss = components.Bce()
+        else:
+            self.bce_loss = components.BceL2()
+
+        if self.combo_IOUL1:
+            self.reg_loss = components.ComboIOUL1(self.combo_IOUL1_lambdas)
+        else:
+            self.reg_loss = components.RegressionLoss()
         self.scale_loss = components.Scale()
 
         self.soft_clamp = None
@@ -236,10 +250,18 @@ class CompositeLoss(torch.nn.Module):
         group = parser.add_argument_group('Composite Loss')
         group.add_argument('--soft-clamp', default=cls.soft_clamp_value, type=float,
                            help='soft clamp')
+        group.add_argument('--combo-IOUL1', default=cls.combo_IOUL1, action='store_true',
+                           help='use a combination of L1 loss and IOU loss')
+        group.add_argument('--combo-IOUL1-lambdas', default=cls.combo_IOUL1_lambdas, nargs=2, type=float,
+                           help='weight of L1 and IOU loss')
+        group.add_argument('--use-bce', default=cls.use_bce, action='store_true')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
         cls.soft_clamp_value = args.soft_clamp
+        cls.combo_IOUL1 = args.combo_IOUL1
+        cls.combo_IOUL1_lambdas = args.combo_IOUL1_lambdas
+        cls.use_bce = args.use_bce
 
     # pylint: disable=too-many-statements
     def forward(self, x, t):
@@ -289,6 +311,15 @@ class CompositeLoss(torch.nn.Module):
 
         l_confidence_bg = self.bce_loss(x_confidence_bg, t_confidence_bg)
         l_confidence = self.bce_loss(x_confidence, t_confidence)
+
+        if self.combo_IOUL1:
+            index_fields = index_field(x.shape[2:4])
+            index_fields = torch.from_numpy(index_fields.copy()).cuda()
+            index_fields = torch.permute(index_fields, (1, 2, 0))
+            index_fields = index_fields.expand(*x.shape[:2],-1,-1,-1)
+            index_fields = index_fields[reg_mask]
+            x_regs[:, 0:2] = index_fields + x_regs[:, 0:2]
+            t_regs[:, 0:2] = index_fields + t_regs[:, 0:2]
         l_reg = self.reg_loss(x_regs, t_regs, t_sigma_min, t_scales_reg)
         l_scale = self.scale_loss(x_scales, t_scales)
 
@@ -301,8 +332,10 @@ class CompositeLoss(torch.nn.Module):
 
         # --- composite uncertainty
         # c
-        x_logs2_c = 3.0 * torch.tanh(x_logs2_c / 3.0)
-        l_confidence = 0.5 * l_confidence * torch.exp(-x_logs2_c) + 0.5 * x_logs2_c
+        if not self.use_bce:
+            x_logs2_c = 3.0 * torch.tanh(x_logs2_c / 3.0)
+            l_confidence = 0.5 * l_confidence * torch.exp(-x_logs2_c) + 0.5 * x_logs2_c
+
         # reg
         x_logs2_reg = 3.0 * torch.tanh(x_logs2_reg / 3.0)
         # We want sigma = b*0.5. Therefore, log_b = 0.5 * log_s2 + log2
@@ -313,7 +346,8 @@ class CompositeLoss(torch.nn.Module):
         if self.n_vectors > 1:
             x_logb = torch.repeat_interleave(x_logb, self.n_vectors, 1)
             reg_factor = torch.repeat_interleave(reg_factor, self.n_vectors, 1)
-        l_reg = l_reg * reg_factor + x_logb
+        if not self.combo_IOUL1:
+            l_reg = l_reg * reg_factor + x_logb
         # scale
         # scale_factor = torch.exp(-x_logs2)
         # for i in range(self.n_scales):
