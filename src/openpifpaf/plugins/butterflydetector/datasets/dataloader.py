@@ -130,13 +130,20 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
                 openpifpaf.transforms.RescaleRelative(scale_range=(0.4 * self.rescale_images,
                                                         2.0 * self.rescale_images),
                                            power_law=True),
+            ]
+            if self.orientation_invariant:
+                # preprocess_transformations += [
+                #     openpifpaf.transforms.RotateBy90(),
+                # ]
+                preprocess_transformations += [openpifpaf.transforms.RandomChoice(
+                    [openpifpaf.transforms.RotateBy90(),
+                     openpifpaf.transforms.RotateUniform(10.0)],
+                    [self.orientation_invariant, 0.2],),
+                    ]
+            preprocess_transformations += [
                 openpifpaf.transforms.Crop(self.square_edge),
                 openpifpaf.transforms.CenterPad(self.square_edge),
             ]
-            if self.orientation_invariant:
-                preprocess_transformations += [
-                    openpifpaf.transforms.RotateBy90(),
-                ]
             preprocess_transformations += [
                 openpifpaf.transforms.TRAIN_TRANSFORM,
             ]
