@@ -1,5 +1,5 @@
 import openpifpaf
-from .datasets.data_loader import UAVDTDataLoader
+from .datasets.dataloader import UAVDTDataLoader
 from . import headmeta
 from .heads import CompositeField
 from .losses.loss import CompositeLoss
