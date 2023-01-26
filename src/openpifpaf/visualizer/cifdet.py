@@ -4,6 +4,7 @@ import logging
 from .base import Base
 from ..annotation import AnnotationCrowd, AnnotationDet
 from .. import headmeta, show
+import numpy as np
 
 try:
     import matplotlib.cm
@@ -34,7 +35,7 @@ class CifDet(Base):
         ]
 
         self._confidences(field[:, 0])
-        self._regressions(field[:, 1:3], field[:, 3:5],
+        self._regressions(field[:, 1:3], field[:, 3:5], confidence_fields=field[:, 0],
                           annotations=annotations)
 
     def predicted(self, field):
@@ -45,7 +46,12 @@ class CifDet(Base):
                           uv_is_offset=False)
 
     def _confidences(self, confidences):
-        for f in self.indices('confidence'):
+        f_range = self.indices('confidence')
+
+        if len(self.indices('confidence'))==1 and self.indices('confidence')[0] == -1:
+            f_range = np.arange(confidences.shape[0])[np.nanmax(confidences, axis=(1,2))>0.2]
+
+        for f in f_range:
             LOG.debug('%s', self.meta.categories[f])
 
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
@@ -55,7 +61,13 @@ class CifDet(Base):
 
     def _regressions(self, regression_fields, wh_fields, *,
                      annotations=None, confidence_fields=None, uv_is_offset=True):
-        for f in self.indices('regression'):
+        f_range = self.indices('regression')
+        if len(self.indices('regression'))==1 \
+            and self.indices('regression')[0] == -1 \
+            and not (confidence_fields is None):
+            f_range = np.arange(confidence_fields.shape[0])[np.nanmax(confidence_fields, axis=(1,2))>0.2]
+
+        for f in f_range:
             LOG.debug('%s', self.meta.categories[f])
             confidence_field = confidence_fields[f] if confidence_fields is not None else None
 
