@@ -4,7 +4,6 @@ import torchvision
 import torch
 import torch.nn.functional as F
 import mmcv
-from mmdet.apis import init_detector
 from mmdet.models import build_backbone, build_neck, NECKS
 # from mmdet.models.registry import NECKS
 from mmcv.cnn import ConvModule
