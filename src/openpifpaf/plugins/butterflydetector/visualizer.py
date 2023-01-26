@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import re
 
-from .data_manager.constants import BBOX_KEYPOINTS
+from .datasets.constants import BBOX_KEYPOINTS
 from openpifpaf import show
 
 LOG = logging.getLogger(__name__)
