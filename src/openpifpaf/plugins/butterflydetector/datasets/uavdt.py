@@ -79,7 +79,7 @@ class UAVDT(torch.utils.data.Dataset):
 
         # PifPaf
         self.preprocess = preprocess
-        self.log = logging.getLogger(self.__class__.__name__)
+        # self.log = logging.getLogger(self.__class__.__name__)
 
         # Cat ID (missing class)
         self.cat_ids = list(ids)
