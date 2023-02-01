@@ -560,13 +560,13 @@ urban mobility such as self-driving cars and delivery robots.</p>
 <p><img alt="example image with overlaid pose predictions" src="_images/000000081988.jpg.predictions.jpeg" /></p>
 <p>Image credit: “<a class="reference external" href="https://www.flickr.com/photos/fotologic/6038911779/in/photostream/">Learning to surf</a>” by fotologic which is licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/2.0/">CC-BY-2.0</a>.<br />
 Created with:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m openpifpaf.predict docs/coco/000000081988.jpg --image-output
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>openpifpaf.predict<span class="w"> </span>docs/coco/000000081988.jpg<span class="w"> </span>--image-output
 </pre></div>
 </div>
 <p><img alt="example image with overlaid wholebody pose predictions" src="https://raw.githubusercontent.com/vita-epfl/openpifpaf/main/docs/soccer.jpeg.predictions.jpeg" />
 Image credit: <a class="reference external" href="https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg">Photo</a> by <a class="reference external" href="https://commons.wikimedia.org/wiki/User:Lokomotive74">Lokomotive74</a> which is licensed under <a class="reference external" href="https://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>.<br />
 Created with:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3 -m openpifpaf.predict docs/wholebody/soccer.jpeg --checkpoint<span class="o">=</span>shufflenetv2k30-wholebody --line-width<span class="o">=</span><span class="m">2</span> --image-output
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>openpifpaf.predict<span class="w"> </span>docs/wholebody/soccer.jpeg<span class="w"> </span>--checkpoint<span class="o">=</span>shufflenetv2k30-wholebody<span class="w"> </span>--line-width<span class="o">=</span><span class="m">2</span><span class="w"> </span>--image-output
 </pre></div>
 </div>
 <p>More demos:</p>
@@ -585,11 +585,11 @@ If you have previously installed the package <code class="docutils literal notra
 <p>This project was forked from <a class="reference external" href="https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1">OpenPifPaf v0.13.1</a> and developed separately from version v0.14.0 on.</p>
 <p>Do not clone this repository.
 Make sure there is no folder named <code class="docutils literal notranslate"><span class="pre">openpifpaf-vita</span></code> in your current directory, and run:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3 install openpifpaf-vita
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>openpifpaf-vita
 </pre></div>
 </div>
 <p>You need to install <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> to produce visual outputs:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3 install matplotlib
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>matplotlib
 </pre></div>
 </div>
 <p>To modify OpenPifPaf itself, please follow <a class="reference internal" href="dev.html#modify-code"><span class="std std-ref">Modify Code</span></a>.</p>
