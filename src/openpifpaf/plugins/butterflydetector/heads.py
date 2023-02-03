@@ -32,7 +32,7 @@ class CompositeField(HeadNetwork):
         self.dilation = dilation
 
         self.dropout = torch.nn.Dropout2d(p=self.dropout_p)
-        self._quad = self.quad
+        self._quad = meta.upsample_stride // 2
 
         # classification
         out_features = n_fields * (4 ** self._quad)
