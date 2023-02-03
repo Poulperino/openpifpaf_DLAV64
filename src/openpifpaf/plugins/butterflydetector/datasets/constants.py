@@ -28,7 +28,7 @@ VISDRONE_CATEGORIES = [
     "awning-tricycle",
     "bus",
     "motor",
-    "ignore"
+    #"others"
 ]
 
 VISDRONE_BBOX_KEYPOINTS = []
@@ -51,6 +51,27 @@ UAVDT_KEYPOINTS = [
     'center',
 ]
 
+UAVDT_KEYPOINTS_3CATEGORIES = [
+    'center_car',
+    'center_truck',
+    'center_bus',
+]
+
+UAVDT_CATEGORIES = [
+    "car",
+    "truck",
+    "bus",
+]
+
+
+UAVDT_BBOX_3CATEGORIES = []
+UAVDT_HFLIP_3CATEGORIES = {}
+for categ in UAVDT_CATEGORIES:
+    for loc in BBOX_KEYPOINTS:
+        UAVDT_BBOX_3CATEGORIES.append(loc + '_' + categ)
+    for source, target in HFLIP.items():
+        UAVDT_HFLIP_3CATEGORIES[source + '_' + categ] = target + '_' + categ
+
 VISDRONE_KEYPOINTS = [
     "center_pedestrian",
     "center_people",
@@ -62,30 +83,5 @@ VISDRONE_KEYPOINTS = [
     "center_awning-tricycle",
     "center_bus",
     "center_motor",
-    #"others"
-]
-
-
-
-UAVDT_CATEGORIES = [
-    "car",
-    "truck",
-    "bus",
-    "van",
-    "cyclist",
-    "pedestrian"
-]
-
-VISDRONE_CATEGORIES = [
-    "pedestrian",
-    "people",
-    "bicycle",
-    "car",
-    "van",
-    "truck",
-    "tricycle",
-    "awning-tricycle",
-    "bus",
-    "motor",
     #"others"
 ]

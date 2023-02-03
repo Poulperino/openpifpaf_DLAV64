@@ -26,7 +26,7 @@ class UAVDT(torch.utils.data.Dataset):
         target_transform (callable, optional): A function/transform that takes in the
             target and transforms it.
     """
-    def __init__(self, root, annFile, *, target_transforms=None, n_images=None, preprocess=None, use_cifdet=False):
+    def __init__(self, root, annFile, *, target_transforms=None, n_images=None, preprocess=None, use_cifdet=False, use_3classes=False):
         self.root = root
         self.annFile = annFile
         folders = os.listdir(self.root)
@@ -73,6 +73,7 @@ class UAVDT(torch.utils.data.Dataset):
 
         ids = set(ids)
         self.use_cifdet = use_cifdet
+        self.use_3classes = use_3classes
 
 
         LOG.info('Images: %d',  len(self.imgs))
@@ -113,31 +114,48 @@ class UAVDT(torch.utils.data.Dataset):
                 h = target[4]
                 x = target[1]
                 y = target[2]
+                if self.use_3classes:
+                    category_id = int(target[0])
+                    keypoints = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]*(category_id-1)\
+                     + [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2]\
+                     + [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]*(3-(category_id))
+                else:
+                    keypoints = [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2]
+                    category_id = int(target[0]) if not self.use_cifdet else 1
                 anns.append({
                     'image_id': index,
-                    'category_id': int(target[0]) if not self.use_cifdet else 1,
+                    'category_id': category_id,
                     'bbox': [x, y, w, h],
                     "area": w*h,
                     "iscrowd": 0,
                     "segmentation":[],
-                    'keypoints': [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2],
+                    'keypoints': keypoints,
                     'num_keypoints': 5,
                 })
-            for target in self.targets_ignore[index]:
-                w = target[3]
-                h = target[4]
-                x = target[1]
-                y = target[2]
-                anns.append({
-                    'image_id': index,
-                    'category_id': 1, #int(target[0]),
-                    'bbox': [x, y, w, h],
-                    "area": w*h,
-                    "iscrowd": 1,
-                    "segmentation":[],
-                    'keypoints': [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2],
-                    'num_keypoints': 5,
-                })
+            if False:
+                for target in self.targets_ignore[index]:
+                    w = target[3]
+                    h = target[4]
+                    x = target[1]
+                    y = target[2]
+                    if self.use_3classes:
+                        category_id = int(target[0])
+                        keypoints = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]*(category_id-1)\
+                         + [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2]\
+                         + [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]*(3-(category_id))
+                    else:
+                        keypoints = [x, y, 2, x+w, y, 2, x+w, y+h, 2, x, y+h, 2, x+w/2, y+h/2, 2]
+                        category_id = 1
+                    anns.append({
+                        'image_id': index,
+                        'category_id': category_id, #int(target[0]),
+                        'bbox': [x, y, w, h],
+                        "area": w*h,
+                        "iscrowd": 1,
+                        "segmentation":[],
+                        'keypoints': keypoints,
+                        'num_keypoints': 5,
+                    })
 
         # preprocess image and annotations
         image, anns, meta = self.preprocess(image, anns, meta)

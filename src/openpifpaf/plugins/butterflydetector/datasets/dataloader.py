@@ -9,10 +9,13 @@ from .constants import (
     VISDRONE_CATEGORIES,
     BBOX_KEYPOINTS,
     VISDRONE_BBOX_KEYPOINTS,
+    UAVDT_BBOX_3CATEGORIES,
     UAVDT_KEYPOINTS,
+    UAVDT_KEYPOINTS_3CATEGORIES,
     VISDRONE_KEYPOINTS,
     HFLIP,
-    VISDRONE_HFLIP
+    VISDRONE_HFLIP,
+    UAVDT_HFLIP_3CATEGORIES
 )
 
 from .uavdt import UAVDT
@@ -42,14 +45,15 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
     eval_annotation_filter = True
 
     use_cifdet = False
+    use_3classes = False
 
     def __init__(self):
         super().__init__()
         if self.use_cifdet:
-            cifdet = openpifpaf.headmeta.CifDet('cifdet', 'uavdt', [UAVDT_CATEGORIES[0]])
+            cifdet = openpifpaf.headmeta.CifDet('cifdet', 'uavdt', [UAVDT_CATEGORIES[0]] if not self.use_3classes else UAVDT_CATEGORIES)
         else:
             cifdet = Butterfly('butterfly', 'uavdt',
-                              keypoints=UAVDT_KEYPOINTS,
+                              keypoints=UAVDT_KEYPOINTS if not self.use_3classes else UAVDT_KEYPOINTS_3CATEGORIES,
                               categories=UAVDT_CATEGORIES)
         cifdet.upsample_stride = self.upsample_stride
         self.head_metas = [cifdet]
@@ -96,6 +100,9 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
         group.add_argument('--uavdt-cifdet',
                            default=False, action='store_true',
                            help='Use CifDet head and encoder')
+        group.add_argument('--uavdt-3classes',
+                           default=False, action='store_true',
+                           help='Train to predict the 3 UAVDT classes')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
@@ -120,6 +127,7 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
         cls.eval_annotation_filter = args.coco_eval_annotation_filter
 
         cls.use_cifdet = args.uavdt_cifdet
+        cls.use_3classes = args.uavdt_3classes
 
     def _preprocess(self):
         # enc = ButterflyEncoder(self.head_metas[0])
@@ -132,7 +140,8 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
                 openpifpaf.transforms.NormalizeAnnotations(),
                 openpifpaf.transforms.AnnotationJitter(),
                 openpifpaf.transforms.RandomApply(
-                    openpifpaf.transforms.HFlip(BBOX_KEYPOINTS, HFLIP), 0.5),
+                    openpifpaf.transforms.HFlip(BBOX_KEYPOINTS if not self.use_3classes else UAVDT_BBOX_3CATEGORIES,
+                                            HFLIP if not self.use_3classes else UAVDT_HFLIP_3CATEGORIES), 0.5),
                 openpifpaf.transforms.RescaleRelative(scale_range=(0.4 * self.rescale_images,
                                                         2.0 * self.rescale_images),
                                            power_law=True),
@@ -171,7 +180,8 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
             root=self.train_image_dir,
             annFile=self.train_annotations,
             preprocess=self._preprocess(),
-            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet)
+            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet),
+            use_3classes=self.use_3classes
         )
 
         return torch.utils.data.DataLoader(
@@ -185,7 +195,8 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
             root=self.val_image_dir,
             annFile=self.val_annotations,
             preprocess=self._preprocess(),
-            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet)
+            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet),
+            use_3classes=self.use_3classes
         )
 
         return torch.utils.data.DataLoader(
@@ -224,7 +235,8 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
             root=self.eval_image_dir,
             annFile=None,
             preprocess=self._eval_preprocess(),
-            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet)
+            use_cifdet= isinstance(self.head_metas[0], openpifpaf.headmeta.CifDet),
+            use_3classes=self.use_3classes
         )
         return torch.utils.data.DataLoader(
             data, batch_size=self.batch_size, shuffle=False,
