@@ -79,8 +79,10 @@ class CenterPadTight(Preprocess):
 
     def center_pad(self, image, anns):
         w, h = image.size
-        target_width = math.ceil((w - 1) / self.multiple) * self.multiple + 1
-        target_height = math.ceil((h - 1) / self.multiple) * self.multiple + 1
+        # target_width = math.ceil((w - 1) / self.multiple) * self.multiple + 1
+        # target_height = math.ceil((h - 1) / self.multiple) * self.multiple + 1
+        target_width = math.ceil((w) / self.multiple) * self.multiple
+        target_height = math.ceil((h) / self.multiple) * self.multiple
 
         left = int((target_width - w) / 2.0)
         top = int((target_height - h) / 2.0)

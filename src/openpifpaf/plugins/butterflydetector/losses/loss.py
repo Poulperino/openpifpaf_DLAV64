@@ -4,14 +4,9 @@ import torch
 import numpy as np
 from .utils import *
 import argparse
+from ..utils import index_field
 
 LOG = logging.getLogger(__name__)
-
-@functools.lru_cache(maxsize=16)
-def index_field(shape):
-    yx = np.indices(shape, dtype=np.float32)
-    xy = np.flip(yx, axis=0)
-    return xy
 
 class CompositeLoss(torch.nn.Module):
     background_weight = 1.0

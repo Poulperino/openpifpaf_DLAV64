@@ -396,6 +396,34 @@ class Factory(Configurable):
 
         net_cpu = nets.Shell(basenet, headnets)
         nets.model_defaults(net_cpu)
+
+        # import pickle
+        # loaded_dict = pickle.load(open('/home/georgeadaimi/Documents/butterflydetector/outputs/visdrone_converted_state_dict.pkl', 'rb'))
+        #
+        # basenet = BASE_FACTORIES['mmdet_hrw32v2det']()
+        # headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
+        #
+        # net_cpu = nets.Shell(basenet, headnets)
+        # # import pdb; pdb.set_trace()
+        # # list_keys = {}
+        # # for k in net_cpu.state_dict().keys():
+        # #     list_keys[k.replace('backbone.', '')] = k
+        # import pdb; pdb.set_trace()
+        # pretrained_dict = {}
+        # for k, v in loaded_dict.items():
+        #     if 'base_net.net.detection_neck.conv1' in k:
+        #         pretrained_dict[k.replace('base_net.net.detection_neck.conv1','base_net.neck_det.reduction_conv.conv')] = v
+        #     else:
+        #         pretrained_dict[k.replace('.net.','.backbone.')] = v
+        #
+        # import pdb; pdb.set_trace()
+        #
+        # ttt = net_cpu.state_dict()
+        # ttt.update(pretrained_dict)
+        # net_cpu.load_state_dict(ttt)
+        # net = net_cpu.to(device='cuda:0')
+        # torch.save({'model': net, 'epoch': 150}, 'outputs/outputs_TRC_rebuttal/visdrone_converted_pifpafvita.pkl.epoch0150')
+
         return net_cpu
 
     def init_net(self, net_cpu):

@@ -5,9 +5,10 @@ import numpy as np
 import torch.utils.data
 import torchvision
 from PIL import Image
-from .. import transforms, utils
+from . import utils
 
 LOG = logging.getLogger(__name__)
+STAT_LOG = logging.getLogger(__name__.replace('openpifpaf.', 'openpifpaf.stats.'))
 
 class VisDrone(torch.utils.data.Dataset):
     """`MS Coco Detection <http://mscoco.org/dataset/#detections-challenge2016>`_ Dataset.
@@ -24,12 +25,12 @@ class VisDrone(torch.utils.data.Dataset):
         target_transform (callable, optional): A function/transform that takes in the
             target and transforms it.
     """
-    train_image_dir = "data/VisDrone2019/VisDrone2019-DET-train/images"
-    val_image_dir = "data/VisDrone2019/VisDrone2019-DET-val/images"
-    train_annotations = "data/VisDrone2019/VisDrone2019-DET-train/annotations"
-    val_annotations = "data/VisDrone2019/VisDrone2019-DET-val/annotations"
-
-    test_path = {'val': "data/VisDrone2019/VisDrone2019-DET-val/images", 'test-dev': "data/VisDrone2019/VisDrone2019-DET-test-dev/images", 'test-challenge': "data/VisDrone2019/VisDrone2019-DET-test-challenge/images"}
+    # train_image_dir = "data/VisDrone2019/VisDrone2019-DET-train/images"
+    # val_image_dir = "data/VisDrone2019/VisDrone2019-DET-val/images"
+    # train_annotations = "data/VisDrone2019/VisDrone2019-DET-train/annotations"
+    # val_annotations = "data/VisDrone2019/VisDrone2019-DET-val/annotations"
+    #
+    # test_path = {'val': "data/VisDrone2019/VisDrone2019-DET-val/images", 'test-dev': "data/VisDrone2019/VisDrone2019-DET-test-dev/images", 'test-challenge': "data/VisDrone2019/VisDrone2019-DET-test-challenge/images"}
 
     def __init__(self, root, annFile, *, target_transforms=None, n_images=None, preprocess=None):
         self.root = root
@@ -66,9 +67,9 @@ class VisDrone(torch.utils.data.Dataset):
         print('Images: {}'.format(len(self.imgs)))
 
         # PifPaf
-        self.preprocess = preprocess or transforms.EVAL_TRANSFORM
-        self.target_transforms = target_transforms
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.preprocess = preprocess #or transforms.EVAL_TRANSFORM
+        # self.target_transforms = target_transforms
+        # self.log = logging.getLogger(self.__class__.__name__)
 
         # Cat ID (missing class)
         self.cat_ids = list(ids)
@@ -88,10 +89,11 @@ class VisDrone(torch.utils.data.Dataset):
             image = Image.open(f).convert('RGB')
 
         initial_size = image.size
-        meta_init = {
+        meta = {
             'dataset_index': index,
             'image_id': index,
             'file_name': img_path,
+            'local_file_path': img_path,
         }
         anns = []
         if len(self.targets)>0:
@@ -108,7 +110,7 @@ class VisDrone(torch.utils.data.Dataset):
                     "iscrowd": 0,
                     "segmentation":[],
                 })
-        if len(self.targets_ignored)>0:
+        if False and len(self.targets_ignored)>0:
             for target in self.targets_ignored[index]:
                 w = target[2]
                 h = target[3]
@@ -125,21 +127,21 @@ class VisDrone(torch.utils.data.Dataset):
 
         anns = self.PIF_category(anns)
         # preprocess image and annotations
-        image, anns, meta = self.preprocess(image, anns, None)
-        meta.update(meta_init)
+        image, anns, meta = self.preprocess(image, anns, meta)
+        # meta.update(meta_init)
 
         # transform image
 
         # mask valid
-        valid_area = meta['valid_area']
-        utils.mask_valid_area(image, valid_area)
+        # valid_area = meta['valid_area']
+        # utils.mask_valid_area(image, valid_area)
 
         # if there are not target transforms, done here
-        self.log.debug(meta)
+        LOG.debug(meta)
         # transform targets
-        if self.target_transforms is not None:
-            width_height = image.shape[2:0:-1]
-            anns = [t(anns, width_height) for t in self.target_transforms]
+        # if self.target_transforms is not None:
+        #     width_height = image.shape[2:0:-1]
+        #     anns = [t(anns, width_height) for t in self.target_transforms]
 
         return image, anns, meta
 

@@ -107,7 +107,7 @@ def cli():
     return args
 
 
-def count_ops(model, height=641, width=641):
+def count_ops(model, height=640, width=640):
     device = next(model.parameters()).device
     dummy_input = torch.randn(1, 3, height, width, device=device)
     gmacs, params = thop.profile(model, inputs=(dummy_input, ))  # pylint: disable=unbalanced-tuple-unpacking
@@ -206,8 +206,8 @@ def evaluate(args):
     stats = dict(**metric_stats, **additional_data)
 
     # write stats file
-    with open(args.output + '.stats.json', 'w') as f:
-        json.dump(stats, f)
+    # with open(args.output + '.stats.json', 'w') as f:
+    #     json.dump(stats, f)
 
     LOG.info('stats:\n%s', json.dumps(stats, indent=4))
     LOG.info(
