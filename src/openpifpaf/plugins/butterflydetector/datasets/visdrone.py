@@ -93,6 +93,7 @@ class VisDrone(torch.utils.data.Dataset):
             'dataset_index': index,
             'image_id': index,
             'file_name': img_path,
+            'local_file_path': img_path,
         }
         anns = []
         if len(self.targets)>0:

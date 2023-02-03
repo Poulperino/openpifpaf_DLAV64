@@ -19,6 +19,7 @@ from .uavdt import UAVDT
 from .visdrone import VisDrone
 from ..headmeta import Butterfly
 from ..butterfly import Butterfly as ButterflyEncoder
+from .metric import AerialMetric
 
 class UAVDTDataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -27,7 +28,8 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
     eval_annotations = val_annotations
     train_image_dir = "data/UAV-benchmark-M/train/"
     val_image_dir = "data/UAV-benchmark-M/test/"
-    eval_image_dir = "data/UAV-benchmark-M/test/"
+    # eval_image_dir = val_image_dir
+    eval_image_dir = train_image_dir
 
     square_edge = 513
     extended_scale = False
@@ -230,7 +232,7 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
             collate_fn=openpifpaf.datasets.collate_images_anns_meta)
 
     def metrics(self):
-        pass
+        return [AerialMetric(dataset='uavdt')]
 
 class VisdroneDataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -439,4 +441,4 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
             collate_fn=openpifpaf.datasets.collate_images_anns_meta)
 
     def metrics(self):
-        pass
+        return [AerialMetric(dataset='visdrone')]
