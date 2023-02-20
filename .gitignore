@@ -62,3 +62,6 @@ eval.sh
 prep.sh
 train.sh
 data
+outputs
+all-images*
+pretrained

@@ -12,7 +12,7 @@ class AnnotationDet(object):
         self.joint_scales_w = None
         self.joint_scales_h = None
         self.data[j] = xyv
-        self.bbox = np.array([xyv[0], xyv[1], xyv[3], xyv[4]])
+        self.bbox = np.array([xyv[0]-0.5*xyv[3], xyv[1]-0.5*xyv[4], xyv[3], xyv[4]])
         self.category_id = j + 1
         self.score = xyv[2]
         self.decoding_order = []

@@ -381,9 +381,24 @@ class Factory(Configurable):
 
         net_cpu: nets.Shell = checkpoint['model']
         epoch = checkpoint['epoch']
-
+        # import pdb; pdb.set_trace()
+        # import pickle
+        # loaded_dict = pickle.load(open('/home/georgeadaimi/Documents/butterflydetector/outputs/visdrone_converted_state_dict.pkl', 'rb'))
+        # og_dict = net_cpu.state_dict()
+        #
+        # pretrained_dict = {}
+        # for k, v in loaded_dict.items():
+        #     if 'base_net.net.detection_neck.conv1' in k:
+        #         pretrained_dict[k.replace('base_net.net.detection_neck.conv1','base_net.neck_det.reduction_conv.conv')] = v.cuda()
+        #     else:
+        #         pretrained_dict[k.replace('.net.','.backbone.')] = v.cuda()
+        # import pdb; pdb.set_trace()
+        # res = [torch.eq(og_dict[k], pretrained_dict[k]).all().item() for k in pretrained_dict.keys()]
+        # assert torch.Tensor(res).all().item()
+        # import pdb; pdb.set_trace()
         # normalize for backwards compatibility
-        model_migration.model_migration(net_cpu)
+        model_migration.model_migration2(net_cpu)
+        # model_migration.model_migration(net_cpu)
 
         return net_cpu, epoch
 
@@ -404,10 +419,10 @@ class Factory(Configurable):
         # headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
         #
         # net_cpu = nets.Shell(basenet, headnets)
-        # # import pdb; pdb.set_trace()
-        # # list_keys = {}
-        # # for k in net_cpu.state_dict().keys():
-        # #     list_keys[k.replace('backbone.', '')] = k
+        # import pdb; pdb.set_trace()
+        # list_keys = {}
+        # for k in net_cpu.state_dict().keys():
+        #     list_keys[k.replace('backbone.', '')] = k
         # import pdb; pdb.set_trace()
         # pretrained_dict = {}
         # for k, v in loaded_dict.items():
@@ -422,8 +437,8 @@ class Factory(Configurable):
         # ttt.update(pretrained_dict)
         # net_cpu.load_state_dict(ttt)
         # net = net_cpu.to(device='cuda:0')
-        # torch.save({'model': net, 'epoch': 150}, 'outputs/outputs_TRC_rebuttal/visdrone_converted_pifpafvita.pkl.epoch0150')
-
+        # torch.save({'model': net, 'epoch': 150}, 'outputs/visdrone_converted_pifpafvita.pkl.epoch0150')
+        # import pdb; pdb.set_trace()
         return net_cpu
 
     def init_net(self, net_cpu):

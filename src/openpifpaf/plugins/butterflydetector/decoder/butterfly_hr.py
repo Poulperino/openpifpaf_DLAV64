@@ -40,7 +40,7 @@ def gaussian_radius(det_size, min_overlap=0.7):
 
 
 class ButterflyHr(object):
-    v_threshold = 0.05
+    v_threshold = 0.1
 
     def __init__(self, scale_wh, pif_nn=None):
         self.pif_nn = pif_nn

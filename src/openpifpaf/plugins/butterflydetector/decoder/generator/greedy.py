@@ -77,10 +77,10 @@ class Greedy(object):
         for v, f, x, y, w, h in self.seeds.get():
             if scalar_nonzero(occupied[f], x, y):
                 continue
-            boxes.append([x-0.5*w, y-0.5*h, x+0.5*w, y+0.5*h])
+            boxes.append([x-0.5*w, y-0.5*h, w, h])
             scores.append(v)
             categories.append(f+1)
-            ann = Annotation(f, (x-0.5*w, y-0.5*h, v, w, h), self.pifhr.scales_w.shape[0], categories=self.meta.categories, dim_per_kps=5)
+            ann = Annotation(f, (x, y, v, w, h), self.pifhr.scales_w.shape[0], categories=self.meta.categories, dim_per_kps=5)
             ann.fill_joint_scales(self.pifhr.scales_w, self.pifhr.scales_h)
             annotations.append(ann)
             mark_occupied(ann)
@@ -88,46 +88,47 @@ class Greedy(object):
         boxes = np.asarray(boxes, dtype=np.float32)
         scores = np.asarray(scores, dtype=np.float32)
         categories = np.asarray(categories)
-        # if new_nms:
-        if self.nms_by_category:
-            keep_index = torchvision.ops.batched_nms(torch.from_numpy(boxes), torch.from_numpy(scores), torch.from_numpy(categories), self.iou_threshold)
-        else:
-            keep_index = torchvision.ops.nms(torch.from_numpy(boxes), torch.from_numpy(scores), self.iou_threshold)
+        # # if new_nms:
+        # if self.nms_by_category:
+        #     keep_index = torchvision.ops.batched_nms(torch.from_numpy(boxes), torch.from_numpy(scores), torch.from_numpy(categories), self.iou_threshold)
         # else:
-        #     bboxes_res = np.array([])
-        #     scores_res = np.array([])
-        #     if self.args.snms:
-        #         for cls in set(categories):
-        #             pick, scores_temp = py_cpu_softnms(bboxes[categories==cls], scores[categories==cls], Nt=0.5, sigma=0.5, thresh=self.args.snms_threshold, method=1)
-        #             if len(bboxes_res) == 0:
-        #                 bboxes_res = bboxes[categories==cls][pick]
-        #                 scores_res = scores_temp
-        #             else:
-        #                 bboxes_res = np.concatenate((bboxes_res, bboxes[categories==cls][pick]))
-        #                 scores_res = np.concatenate((scores_res, scores_temp))
-        #     elif self.args.nms:
-        #         _, pick = non_max_suppression_fast(np.concatenate((bboxes, scores[:, np.newaxis]), axis=1), categories, overlapThresh=self.args.nms_threshold)
-        #         bboxes_res = bboxes[pick]
-        #         scores_res = scores[pick]
+        #     keep_index = torchvision.ops.nms(torch.from_numpy(boxes), torch.from_numpy(scores), self.iou_threshold)
+        # # else:
+        # #     bboxes_res = np.array([])
+        # #     scores_res = np.array([])
+        # #     if self.args.snms:
+        # #         for cls in set(categories):
+        # #             pick, scores_temp = py_cpu_softnms(bboxes[categories==cls], scores[categories==cls], Nt=0.5, sigma=0.5, thresh=self.args.snms_threshold, method=1)
+        # #             if len(bboxes_res) == 0:
+        # #                 bboxes_res = bboxes[categories==cls][pick]
+        # #                 scores_res = scores_temp
+        # #             else:
+        # #                 bboxes_res = np.concatenate((bboxes_res, bboxes[categories==cls][pick]))
+        # #                 scores_res = np.concatenate((scores_res, scores_temp))
+        # #     elif self.args.nms:
+        # #         _, pick = non_max_suppression_fast(np.concatenate((bboxes, scores[:, np.newaxis]), axis=1), categories, overlapThresh=self.args.nms_threshold)
+        # #         bboxes_res = bboxes[pick]
+        # #         scores_res = scores[pick]
+        #
+        if len(annotations)>0:
+            _, pick = non_max_suppression_fast(np.concatenate((boxes, scores[:, np.newaxis]), axis=1), categories, overlapThresh=0.8)
+            annotations = np.asarray(annotations)[pick].tolist()
+            # scores = scores[pick]
 
-        # if len(annotations)>0:
-        #     _, pick = non_max_suppression_fast(np.concatenate((boxes, scores[:, np.newaxis]), axis=1), categories, overlapThresh=0.8)
-        #     annotations = np.asarray(annotations)[pick]
-        #     scores = scores[pick]
-        keep_index = keep_index.numpy()
-        pre_nms_scores = np.copy(scores)
-        scores *= self.suppression
-        scores[keep_index] = pre_nms_scores[keep_index]
-        filter_mask = (scores > self.instance_threshold)
-        categories = categories[filter_mask]
-        scores = scores[filter_mask]
-        boxes = boxes[filter_mask]
-        annotations = np.asarray(annotations)[filter_mask]
-
-
-
-        for ann, score in zip(annotations, scores):
-            ann.score = score
+        # keep_index = keep_index.numpy()
+        # pre_nms_scores = np.copy(scores)
+        # scores *= self.suppression
+        # scores[keep_index] = pre_nms_scores[keep_index]
+        # filter_mask = (scores > self.instance_threshold)
+        # categories = categories[filter_mask]
+        # scores = scores[filter_mask]
+        # boxes = boxes[filter_mask]
+        # annotations = np.asarray(annotations)[filter_mask]
+        #
+        #
+        #
+        # for ann, score in zip(annotations, scores):
+        #     ann.score = score
 
         annotations = sorted(annotations, key=lambda x: x.score, reverse=True)
         LOG.debug('cpp annotations = %d (%.1fms)',
