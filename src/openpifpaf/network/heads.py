@@ -318,20 +318,29 @@ class CompositeField4(HeadNetwork):
         # prediction heads
         self.n_components = 1 + meta.n_confidences + meta.n_vectors * 2 + meta.n_scales
         channels_per_component = meta.n_fields * (meta.upsample_stride ** 2)
-        head_configs = (
-            [(1, 1), (meta.n_confidences, 1), (meta.n_vectors, 2), (meta.n_scales, 1)]
-            if self.separate_per_component else [(1, self.n_components)]
-        )
-        self.heads = torch.nn.ModuleList([build_head(
-            self.depth,
-            in_features,
-            self.width,
-            channels_per_component * component_size,
-            final_kernel_size=kernel_size,
-            final_padding=padding,
-            final_dilation=dilation,
-            inplace=self.inplace_ops,
-        ) for n_comp, component_size in head_configs for _ in range(n_comp)])
+        if self.separate_per_component:
+            conv_config = [(1, 1), (meta.n_confidences, 1), (meta.n_vectors, 2), (meta.n_scales, 1)]
+            self.conv_list = torch.nn.ModuleList([build_head(
+                self.depth,
+                in_features,
+                self.width,
+                channels_per_component * component_size,
+                final_kernel_size=kernel_size,
+                final_padding=padding,
+                final_dilation=dilation,
+                inplace=self.inplace_ops,
+            ) for n_comp, component_size in conv_config for _ in range(n_comp)])
+        else:
+            self.conv = build_head(
+                self.depth,
+                in_features,
+                self.width,
+                channels_per_component * self.n_components,
+                final_kernel_size=kernel_size,
+                final_padding=padding,
+                final_dilation=dilation,
+                inplace=self.inplace_ops,
+            )
 
         # upsample
         assert meta.upsample_stride >= 1
@@ -378,10 +387,13 @@ class CompositeField4(HeadNetwork):
 
     def forward(self, x):  # pylint: disable=arguments-differ
         x = self.dropout(x)
-        x_heads = []
-        for h in self.heads:
-            x_heads.append(h(x))
-        x = torch.cat(x_heads, dim=1)
+        if self.separate_per_component:
+            x_convs = []
+            for conv in self.conv_list:
+                x_convs.append(conv(x))
+            x = torch.cat(x_convs, dim=1)
+        else:
+            x = self.conv(x)
 
         # upscale
         if self.upsample_op is not None:
@@ -402,14 +414,23 @@ class CompositeField4(HeadNetwork):
         feature_height = int(x_size[2])
         feature_width = int(x_size[3])
 
-        x = x.view(
-            batch_size,
-            self.n_components,
-            self.meta.n_fields,
-            feature_height,
-            feature_width
+        if self.separate_per_component:
+            x = x.view(
+                batch_size,
+                self.n_components,
+                self.meta.n_fields,
+                feature_height,
+                feature_width,
+            )
+            x = x.transpose(1, 2)  # necessary if separate_per_component
+        else:
+            x = x.view(
+                batch_size,
+                self.meta.n_fields,
+                self.n_components,
+                feature_height,
+                feature_width,
         )
-        x = x.transpose(1, 2)  # necessary if separate_per_component
 
         if not self.training and self.inplace_ops:
             # classification
