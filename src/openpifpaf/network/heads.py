@@ -430,7 +430,7 @@ class CompositeField4(HeadNetwork):
                 self.n_components,
                 feature_height,
                 feature_width,
-        )
+            )
 
         if not self.training and self.inplace_ops:
             # classification
