@@ -25,7 +25,7 @@ def build_head(depth,
                inplace=True):
     head = []
     d_in = in_features
-    for layer in range (depth - 1):
+    for layer in range(depth - 1):
         if width is None:
             d_out = d_in
         else:
@@ -409,7 +409,7 @@ class CompositeField4(HeadNetwork):
             feature_height,
             feature_width
         )
-        x = x.transpose(1,2) # necessary if separate_per_component
+        x = x.transpose(1, 2)  # necessary if separate_per_component
 
         if not self.training and self.inplace_ops:
             # classification
