@@ -385,7 +385,7 @@ class CompositeField4(HeadNetwork):
     def sparse_task_parameters(self):
         return [self.conv.weight]
 
-    def forward(self, x):  # pylint: disable=arguments-differ
+    def forward(self, x):  # pylint: disable=arguments-differ,too-many-statements,too-many-branches
         x = self.dropout(x)
         if self.separate_per_component:
             x_convs = []
