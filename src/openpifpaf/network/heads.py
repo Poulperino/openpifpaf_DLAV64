@@ -11,27 +11,35 @@ from .. import headmeta
 
 LOG = logging.getLogger(__name__)
 
-class convolution(torch.nn.Module):
-    def __init__(self, k, inp_dim, out_dim, stride=1, with_bn=True):
-        super(convolution, self).__init__()
 
-        pad = (k - 1) // 2
-        self.conv = torch.nn.Conv2d(inp_dim, out_dim, (k, k), padding=(pad, pad), stride=(stride, stride), bias=not with_bn)
-        self.bn   = torch.nn.BatchNorm2d(out_dim) if with_bn else torch.nn.Sequential()
-        #self.bn   = torch.nn.GroupNorm(num_groups=32, num_channels=out_dim) if with_bn else nn.Sequential()
-        self.relu = torch.nn.ReLU(inplace=True)
+def build_head(depth,
+               in_features,
+               width,
+               out_features,
+               intermediate_kernel_size=3,
+               intermediate_padding=1,
+               intermediate_dilation=1,
+               final_kernel_size=1,
+               final_padding=0,
+               final_dilation=1,
+               inplace=True):
+    head = []
+    d_in = in_features
+    for layer in range (depth - 1):
+        if width is None:
+            d_out = d_in
+        else:
+            d_out = width[0] if (len(width) == 1) else width[layer]
+        head.append(torch.nn.Conv2d(d_in, d_out, intermediate_kernel_size,
+                                    padding=intermediate_padding,
+                                    dilation=intermediate_dilation, bias=False))
+        head.append(torch.nn.BatchNorm2d(d_out))
+        head.append(torch.nn.ReLU(inplace=inplace))
+        d_in = d_out
+    head.append(torch.nn.Conv2d(d_in, out_features, final_kernel_size,
+                                padding=final_padding, dilation=final_dilation))
+    return torch.nn.Sequential(*head)
 
-    def forward(self, x):
-        conv = self.conv(x)
-        bn   = self.bn(conv)
-        relu = self.relu(bn)
-        return relu
-
-def make_deep_layer(depth, cnv_dim, curr_dim, out_dim, padding, dilation, with_bn=False):
-    return torch.nn.Sequential(*[
-        convolution(3, curr_dim, curr_dim, with_bn=with_bn) for _ in range(depth)],
-        torch.nn.Conv2d(curr_dim, out_dim, (1, 1))
-    )
 
 @functools.lru_cache(maxsize=16)
 def index_field_torch(shape, *, device=None, unsqueeze=(0, 0)):
@@ -290,8 +298,9 @@ class CompositeField3(HeadNetwork):
 class CompositeField4(HeadNetwork):
     dropout_p = 0.0
     inplace_ops = True
-    deep = False
-    deep_separate = False
+    depth = 1
+    width = None
+    separate_per_component = False
 
     def __init__(self,
                  meta: headmeta.Base,
@@ -306,21 +315,23 @@ class CompositeField4(HeadNetwork):
 
         self.dropout = torch.nn.Dropout2d(p=self.dropout_p)
 
-        # convolution
+        # prediction heads
         self.n_components = 1 + meta.n_confidences + meta.n_vectors * 2 + meta.n_scales
-
-        if self.deep:
-            self.conv = make_deep_layer(3, in_features, in_features, meta.n_fields * self.n_components * (meta.upsample_stride ** 2) , padding=padding, dilation=dilation)
-        elif self.deep_separate:
-            self.conv_uncertainties = make_deep_layer(3, in_features, in_features, meta.n_fields  * (meta.upsample_stride ** 2), padding=padding, dilation=dilation)
-            self.conv_confidences = [make_deep_layer(3, in_features, in_features, meta.n_fields  * (meta.upsample_stride ** 2), padding=padding, dilation=dilation).cuda() for _ in range(meta.n_confidences)]
-            self.conv_vectors = [make_deep_layer(3, in_features, in_features, meta.n_fields * 2 * (meta.upsample_stride ** 2), padding=padding, dilation=dilation).cuda() for _ in range(meta.n_vectors)]
-            self.conv_scales = [make_deep_layer(3, in_features, in_features, meta.n_fields * (meta.upsample_stride ** 2), padding=padding, dilation=dilation).cuda() for _ in range(meta.n_scales)]
-        else:
-            self.conv = torch.nn.Conv2d(
-                in_features, meta.n_fields * self.n_components * (meta.upsample_stride ** 2),
-                kernel_size, padding=padding, dilation=dilation,
-            )
+        channels_per_component = meta.n_fields * (meta.upsample_stride ** 2)
+        head_configs = (
+            [(1, 1), (meta.n_confidences, 1), (meta.n_vectors, 2), (meta.n_scales, 1)]
+            if self.separate_per_component else [(1, self.n_components)]
+        )
+        self.heads = torch.nn.ModuleList([build_head(
+            self.depth,
+            in_features,
+            self.width,
+            channels_per_component * component_size,
+            final_kernel_size=kernel_size,
+            final_padding=padding,
+            final_dilation=dilation,
+            inplace=self.inplace_ops,
+        ) for n_comp, component_size in head_configs for _ in range(n_comp)])
 
         # upsample
         assert meta.upsample_stride >= 1
@@ -337,21 +348,29 @@ class CompositeField4(HeadNetwork):
         group.add_argument('--cf4-no-inplace-ops', dest='cf4_inplace_ops',
                            default=True, action='store_false',
                            help='alternative graph without inplace ops')
-
-        group.add_argument('--cf4-deep', dest='cf4_deep',
+        group.add_argument('--cf4-depth',
+                           type=int, default=cls.depth,
+                           help='depth of prediction heads')
+        group.add_argument('--cf4-width',
+                           nargs='*', type=int, default=cls.width,
+                           help='widths of intermediate layers of prediction heads')
+        group.add_argument('--cf4-separate-per-component',
                            default=False, action='store_true',
-                           help='use deep heads')
-
-        group.add_argument('--cf4-deep-separate', dest='cf4_deep_separate',
-                           default=False, action='store_true',
-                           help='use deep heads separate per type of field')
+                           help='separate heads per component')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
         cls.dropout_p = args.cf4_dropout
         cls.inplace_ops = args.cf4_inplace_ops
-        cls.deep = args.cf4_deep
-        cls.deep_separate = args.cf4_deep_separate
+        assert args.cf4_depth > 0
+        cls.depth = args.cf4_depth
+        assert (
+            (args.cf4_width is None)
+            or (len(args.cf4_width) == 1)
+            or (len(args.cf4_width) == args.cf4_depth - 1)
+        )
+        cls.width = args.cf4_width
+        cls.separate_per_component = args.cf4_separate_per_component
 
     @property
     def sparse_task_parameters(self):
@@ -359,23 +378,11 @@ class CompositeField4(HeadNetwork):
 
     def forward(self, x):  # pylint: disable=arguments-differ
         x = self.dropout(x)
-        if self.deep_separate:
-            x_toConcat = []
+        x_heads = []
+        for h in self.heads:
+            x_heads.append(h(x))
+        x = torch.cat(x_heads, dim=1)
 
-            x_toConcat.append(self.conv_uncertainties(x))
-
-            for conv_conf in self.conv_confidences:
-                x_toConcat.append(conv_conf(x))
-
-            for conv_vec in self.conv_vectors:
-                x_toConcat.append(conv_vec(x))
-
-            for conv_scal in self.conv_scales:
-                x_toConcat.append(conv_scal(x))
-
-            x = torch.cat(x_toConcat, dim=1)
-        else:
-            x = self.conv(x)
         # upscale
         if self.upsample_op is not None:
             x = self.upsample_op(x)
@@ -397,11 +404,12 @@ class CompositeField4(HeadNetwork):
 
         x = x.view(
             batch_size,
-            self.meta.n_fields,
             self.n_components,
+            self.meta.n_fields,
             feature_height,
             feature_width
         )
+        x = x.transpose(1,2) # necessary if separate_per_component
 
         if not self.training and self.inplace_ops:
             # classification
