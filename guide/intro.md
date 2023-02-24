@@ -30,7 +30,7 @@ Continuously tested on Linux, MacOS and Windows:
 
 Previous [CVPR 2019 paper](http://openaccess.thecvf.com/content_CVPR_2019/html/Kreiss_PifPaf_Composite_Fields_for_Human_Pose_Estimation_CVPR_2019_paper.html).
 
-This project was forked from [OpenPifPaf v0.13.1](https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1) and developed separately from version v0.14.0 on.
+Have fun with [our latest real-time interactive demo](https://vitademo.epfl.ch/movements/)!
 
 
 ## Demo
@@ -38,14 +38,14 @@ This project was forked from [OpenPifPaf v0.13.1](https://github.com/openpifpaf/
 ![example image with overlaid pose predictions](../docs/coco/000000081988.jpg.predictions.jpeg)
 
 Image credit: "[Learning to surf](https://www.flickr.com/photos/fotologic/6038911779/in/photostream/)" by fotologic which is licensed under [CC-BY-2.0].<br />
-Created with
+Created with:
 ```sh
 python3 -m openpifpaf.predict docs/coco/000000081988.jpg --image-output
 ```
 
 ![example image with overlaid wholebody pose predictions](https://raw.githubusercontent.com/vita-epfl/openpifpaf/main/docs/soccer.jpeg.predictions.jpeg)
 Image credit: [Photo](https://de.wikipedia.org/wiki/Kamil_Vacek#/media/Datei:Kamil_Vacek_20200627.jpg) by [Lokomotive74](https://commons.wikimedia.org/wiki/User:Lokomotive74) which is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).<br />
-Created with
+Created with:
 ```sh
 python3 -m openpifpaf.predict docs/wholebody/soccer.jpeg --checkpoint=shufflenetv2k30-wholebody --line-width=2 --image-output
 ```
@@ -65,6 +65,8 @@ More demos:
 
 This version of OpenPifPaf (`openpifpaf-vita`) cannot co-exist with the original one ([`openpifpaf`](https://github.com/openpifpaf/openpifpaf)) in the same environment.
 If you have previously installed the package `openpifpaf`, remove it before installation to avoid conflicts.
+
+This project was forked from [OpenPifPaf v0.13.1](https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1) and developed separately from version v0.14.0 on.
 
 Do not clone this repository.
 Make sure there is no folder named `openpifpaf-vita` in your current directory, and run:

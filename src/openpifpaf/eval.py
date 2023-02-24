@@ -143,13 +143,14 @@ def evaluate(args):
         time.sleep(args.loader_warmup)
         LOG.info('Done.')
 
+    image_number = min(len(data_loader.dataset), len(data_loader) * data_loader.batch_size)
     metrics = datamodule.metrics()
     total_start = time.perf_counter()
     loop_start = time.perf_counter()
 
     for image_i, (pred, gt_anns, image_meta) in enumerate(prediction_loader):
         LOG.info('image %d / %d, last loop: %.3fs, images per second=%.1f',
-                 image_i, len(data_loader), time.perf_counter() - loop_start,
+                 image_i, image_number, time.perf_counter() - loop_start,
                  image_i / max(1, (time.perf_counter() - total_start)))
         loop_start = time.perf_counter()
 

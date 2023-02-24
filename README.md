@@ -29,7 +29,7 @@ Continuously tested on Linux, MacOS and Windows:
 
 Previous [CVPR 2019 paper](http://openaccess.thecvf.com/content_CVPR_2019/html/Kreiss_PifPaf_Composite_Fields_for_Human_Pose_Estimation_CVPR_2019_paper.html).
 
-This project was forked from [OpenPifPaf v0.13.1](https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1) and developed separately from version v0.14.0 on.
+Have fun with [our latest real-time interactive demo](https://vitademo.epfl.ch/movements/)!
 
 
 # [Guide](https://vita-epfl.github.io/openpifpaf/intro.html)
@@ -44,6 +44,8 @@ which is the same guide but based on the latest code in the `main` branch.
 
 This version of OpenPifPaf (`openpifpaf-vita`) cannot co-exist with the original one ([`openpifpaf`](https://github.com/openpifpaf/openpifpaf)) in the same environment.
 If you have previously installed the package `openpifpaf`, remove it before installation to avoid conflicts.
+
+This project was forked from [OpenPifPaf v0.13.1](https://github.com/openpifpaf/openpifpaf/releases/tag/v0.13.1) and developed separately from version v0.14.0 on.
 
 Do not clone this repository.
 Make sure there is no folder named `openpifpaf-vita` in your current directory, and run:

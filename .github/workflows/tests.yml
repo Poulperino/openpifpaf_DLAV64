@@ -11,11 +11,6 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python: 3.6
-            torch: 1.9.0+cpu
-            torchvision: 0.10.0+cpu
-            torch-source: https://download.pytorch.org/whl/torch_stable.html
-          - os: ubuntu-latest
             python: 3.7
             torch: 1.9.0+cpu
             torchvision: 0.10.0+cpu

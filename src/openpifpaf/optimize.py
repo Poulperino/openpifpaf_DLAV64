@@ -106,7 +106,6 @@ def factory_optimizer(args, parameters):
             (p for p in parameters if p.requires_grad),
             lr=args.lr, betas=(args.momentum, args.beta2),
             weight_decay=args.weight_decay, eps=args.adam_eps, amsgrad=args.amsgrad)
-
     else:
         LOG.info('SGD optimizer')
         optimizer = torch.optim.SGD(

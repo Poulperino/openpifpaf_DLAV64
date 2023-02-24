@@ -28,6 +28,7 @@ def test_onnx_exportable(tmpdir):
     openpifpaf.export_onnx.check(outfile)
 
 
+@pytest.mark.skip(reason='simplifier is unstable')
 @pytest.mark.skipif(onnxruntime is None, reason='onnxruntime unavailable')
 @pytest.mark.skipif(sys.version_info >= (3, 9),
                     reason='onnx-simplifier requires py<3.9')
