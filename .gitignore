@@ -61,3 +61,7 @@ profile_decoder*
 eval.sh
 prep.sh
 train.sh
+data
+all-images*
+pretrained
+pretrained/

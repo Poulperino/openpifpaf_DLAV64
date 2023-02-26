@@ -50,7 +50,7 @@ class CifDet(Base):
 
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
                 im = ax.imshow(self.scale_scalar(confidences[f], self.meta.stride),
-                               alpha=0.9, vmin=0.0, vmax=1.0, cmap=CMAP_GREENS_NAN)
+                               alpha=0.4, vmin=0.0, vmax=1.0, cmap=CMAP_GREENS_NAN)
                 self.colorbar(ax, im)
 
     def _regressions(self, regression_fields, wh_fields, *,
