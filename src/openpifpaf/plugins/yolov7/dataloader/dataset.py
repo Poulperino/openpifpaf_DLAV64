@@ -335,17 +335,17 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             if random.random() < hyp['flipud']:
                 img = np.flipud(img)
                 if nL:
-                    labels[:, 2] = img.shape[0] - labels[:, 2]
+                    labels[:, 2] = img.shape[0] - (labels[:, 2] + labels[:, 4])
 
             # flip left-right
             if random.random() < hyp['fliplr']:
                 img = np.fliplr(img)
                 if nL:
-                    labels[:, 1] = img.shape[1] - labels[:, 1]
+                    labels[:, 1] = img.shape[1] - (labels[:, 1] + labels[:, 3])
 
-        labels_out = torch.zeros((nL, 6))
-        if nL:
-            labels_out[:, 1:] = torch.from_numpy(labels)
+        # labels_out = torch.zeros((nL, 6))
+        # if nL:
+        #     labels_out[:, 1:] = torch.from_numpy(labels)
 
         # Convert
         img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
