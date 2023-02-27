@@ -325,7 +325,7 @@ class Factory(Configurable):
         elif self.head_consolidation == 'create':
             LOG.info('creating new heads')
             headnets = [HEADS[h.__class__](h, net_cpu.base_net.out_features)
-                        for h in head_metas]
+                            for h in head_metas]
             net_cpu.set_head_nets(headnets)
         elif self.head_consolidation == 'filter_and_extend':
             LOG.info('filtering for dataset heads and extending existing heads')
@@ -342,7 +342,7 @@ class Factory(Configurable):
                     head_metas[meta_i] = hn.meta
                 else:
                     headnets.append(
-                        HEADS[meta.__class__](meta, net_cpu.base_net.out_features))
+                            HEADS[meta.__class__](meta, net_cpu.base_net.out_features))
             net_cpu.set_head_nets(headnets)
         else:
             raise Exception('head strategy {} unknown'.format(self.head_consolidation))
@@ -407,7 +407,10 @@ class Factory(Configurable):
             raise Exception('basenet {} unknown'.format(self.base_name))
 
         basenet = BASE_FACTORIES[self.base_name]()
-        headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
+        if isinstance(basenet.out_features, list):
+            headnets = [HEADS[h.__class__](h, out_feature) for h in head_metas for out_feature in basenet.out_features]
+        else:
+            headnets = [HEADS[h.__class__](h, out_feature) for h in head_metas]
 
         net_cpu = nets.Shell(basenet, headnets)
         nets.model_defaults(net_cpu)

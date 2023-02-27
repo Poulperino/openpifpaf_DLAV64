@@ -42,7 +42,7 @@ class Canvas:
 
         cls.all_images_count += 1
         return os.path.join(cls.all_images_directory,
-                            '{:04}.{}'.format(cls.all_images_count, cls.out_file_extension))
+                            '{:08}.{}'.format(cls.all_images_count, cls.out_file_extension))
 
     @classmethod
     @contextmanager

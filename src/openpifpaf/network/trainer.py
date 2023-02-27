@@ -414,6 +414,14 @@ class Trainer():
         }, filename)
         LOG.info('model written: %s', filename)
 
+        optim_filename = '{}.optim.epoch{:03d}'.format(self.out, epoch)
+        LOG.debug('about to write training state')
+        torch.save({
+            'optimizer': self.optimizer.state_dict(),
+            'loss': self.loss.state_dict(),
+        }, optim_filename)
+        LOG.info('training state written: %s', optim_filename)
+
         if final:
             sha256_hash = hashlib.sha256()
             with open(filename, 'rb') as f:

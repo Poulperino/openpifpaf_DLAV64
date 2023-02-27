@@ -36,7 +36,6 @@ class Predictor:
             self.model.base_net = self.model_cpu.base_net
             self.model.head_nets = self.model_cpu.head_nets
 
-        self.preprocess = self._preprocess_factory()
         self.processor = decoder.factory(self.model_cpu.head_metas)
 
         self.last_decoder_time = 0.0
@@ -82,7 +81,7 @@ class Predictor:
         cls.loader_workers = args.loader_workers
         cls.long_edge = args.long_edge
 
-    def _preprocess_factory(self):
+    def preprocess_factory(self):
         rescale_t = None
         if self.long_edge:
             rescale_t = transforms.RescaleAbsolute(self.long_edge, fast=self.fast_rescaling)
@@ -161,7 +160,7 @@ class Predictor:
     def images(self, file_names, **kwargs):
         """Predict from image file names."""
         data = datasets.ImageList(
-            file_names, preprocess=self.preprocess, with_raw_image=True)
+            file_names, preprocess=self.preprocess_factory(), with_raw_image=True)
         yield from self.dataset(data, **kwargs)
 
     def pil_image(self, image):
@@ -171,7 +170,7 @@ class Predictor:
     def pil_images(self, pil_images, **kwargs):
         """Predict from Pillow images."""
         data = datasets.PilImageList(
-            pil_images, preprocess=self.preprocess, with_raw_image=True)
+            pil_images, preprocess=self.preprocess_factory(), with_raw_image=True)
         yield from self.dataset(data, **kwargs)
 
     def numpy_image(self, image):
@@ -181,7 +180,7 @@ class Predictor:
     def numpy_images(self, numpy_images, **kwargs):
         """Predict from numpy images."""
         data = datasets.NumpyImageList(
-            numpy_images, preprocess=self.preprocess, with_raw_image=True)
+            numpy_images, preprocess=self.preprocess_factory(), with_raw_image=True)
         yield from self.dataset(data, **kwargs)
 
     def image_file(self, file_pointer):

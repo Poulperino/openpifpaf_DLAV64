@@ -114,7 +114,7 @@ def main():
         visualize_image=(not args.json_output or args.video_output),
         visualize_processed_image=args.debug,
     )
-    capture = Stream(args.source, preprocess=predictor.preprocess)
+    capture = Stream(args.source, preprocess=predictor.preprocess_factory())
 
     annotation_painter = show.AnnotationPainter()
     animation = show.AnimationFrame(
