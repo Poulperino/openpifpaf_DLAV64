@@ -410,7 +410,7 @@ class Factory(Configurable):
         if isinstance(basenet.out_features, list):
             headnets = [HEADS[h.__class__](h, out_feature) for h in head_metas for out_feature in basenet.out_features]
         else:
-            headnets = [HEADS[h.__class__](h, out_feature) for h in head_metas]
+            headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
 
         net_cpu = nets.Shell(basenet, headnets)
         nets.model_defaults(net_cpu)
