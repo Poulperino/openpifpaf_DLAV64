@@ -223,9 +223,15 @@ class AnnRescalerDet():
             meta['valid_area'][3] / self.stride,
         )
 
-    def detections(self, anns):
-        category_bboxes = [(ann['category_id'], ann['bbox'] / self.stride)
-                           for ann in anns if not ann['iscrowd']]
+    def detections(self, anns, meta=None):
+        if meta and hasattr(meta, 'fpn_interval'):
+            category_bboxes = [(ann['category_id'], ann['bbox'] / self.stride)
+                               for ann in anns if not ann['iscrowd']
+                               if (ann['bbox'][2]*ann['bbox'][3]>=meta.fpn_interval[0]**2
+                               and ann['bbox'][2]*ann['bbox'][3]<meta.fpn_interval[1]**2)]
+        else:
+            category_bboxes = [(ann['category_id'], ann['bbox'] / self.stride)
+                               for ann in anns if not ann['iscrowd']]
         return category_bboxes
 
     def bg_mask(self, anns, width_height, *, crowd_margin):

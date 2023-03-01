@@ -72,7 +72,7 @@ class CifDet(Base):
             confidence_field = confidence_fields[f] if confidence_fields is not None else None
 
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
-                show.white_screen(ax, alpha=0.5)
+                show.white_screen(ax, alpha=0.1)
                 if annotations:
                     self.annotation_painter.annotations(ax, annotations, color='lightgray')
                 q = show.quiver(ax,

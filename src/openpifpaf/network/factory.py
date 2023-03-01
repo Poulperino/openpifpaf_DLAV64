@@ -408,7 +408,7 @@ class Factory(Configurable):
 
         basenet = BASE_FACTORIES[self.base_name]()
         if isinstance(basenet.out_features, list):
-            headnets = [HEADS[h.__class__](h, out_feature) for h in head_metas for out_feature in basenet.out_features]
+            headnets = [HEADS[h.__class__](h, basenet.out_features[h.feature_index]) for h in head_metas]
         else:
             headnets = [HEADS[h.__class__](h, basenet.out_features) for h in head_metas]
 

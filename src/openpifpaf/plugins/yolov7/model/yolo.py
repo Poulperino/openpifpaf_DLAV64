@@ -37,7 +37,7 @@ class Model(openpifpaf.network.BaseNetwork):
             yaml_file = Path(cfg).name
             with open(cfg) as f:
                 yaml = yaml.load(f, Loader=yaml.SafeLoader)  # model dict
-        super(Model, self).__init__(Path(cfg).stem, stride=16, out_features=yaml['out_features'])
+        super(Model, self).__init__(Path(cfg).stem, stride=32, out_features=yaml['out_features'])
         self.traced = False
         self.yaml = yaml
 

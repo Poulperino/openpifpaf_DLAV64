@@ -6,6 +6,8 @@ import yaml
 import openpifpaf
 from ..utils.general import colorstr, check_img_size, check_dataset
 from .dataset import LoadImagesAndLabels
+from ..butterflyencoder.butterfly import Butterfly as ButterflyEncoder
+from ..butterflyencoder.headmeta import Butterfly
 
 class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -21,13 +23,42 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     hyp = None
     device = torch.device('cpu')
     augmentation = True
+    use_cifdet = False
+    singleclass = False
+    largest_interval = 64
 
     def __init__(self):
         super().__init__()
         check_dataset(self.data_dict)
-        cifdet = openpifpaf.headmeta.CifDet('cifdet', 'yolov7data', self.data_dict['names'])
-        cifdet.upsample_stride = self.upsample_stride
-        self.head_metas = [cifdet]
+        self.head_metas = []
+        if not self.fpn > 1:
+            if self.use_cifdet:
+                cifdet = openpifpaf.headmeta.CifDet('cifdet', 'yolov7data', self.data_dict['names'] if not self.single_cls else ['vehicle'])
+            else:
+                cifdet = Butterfly('butterfly', 'yolov7data',
+                                categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
+
+            cifdet.upsample_stride = self.upsample_stride
+            self.head_metas.append(cifdet)
+        else:
+            for indx in range(self.fpn):
+                if self.use_cifdet:
+                    cifdet = openpifpaf.headmeta.CifDet('cifdet_fpn'+str(indx), 'yolov7data',
+                                    self.data_dict['names'] if not self.single_cls else ['vehicle'])
+                else:
+                    cifdet = Butterfly('butterfly_fpn'+str(indx), 'yolov7data',
+                                    categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
+                cifdet.feature_index = indx
+                cifdet.upsample_stride = self.upsample_stride
+                cifdet.fpn_stride = int(self.fpn_relative_strides[indx])
+                if int(self.fpn_relative_strides[indx]) != 1:
+                    if indx == 0:
+                        cifdet.fpn_interval = [-1, 2*self.largest_interval//int(self.fpn_relative_strides[indx])]
+                    else:
+                        cifdet.fpn_interval = [self.largest_interval//int(self.fpn_relative_strides[indx]), 2*self.largest_interval//int(self.fpn_relative_strides[indx])]
+                else:
+                    cifdet.fpn_interval = [self.largest_interval, float('inf')]
+                self.head_metas.append(cifdet)
         # import pdb; pdb.set_trace()
         # self.imgsz = check_img_size(self.imgsz, self.head_metas[0].stride)
 
@@ -52,6 +83,20 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
         group.add_argument('--yolov7-upsample',
                            default=cls.upsample_stride, type=int,
                            help='head upsample stride')
+        group.add_argument('--yolov7-cifdet',
+                           default=False, action='store_true',
+                           help='Use CifDet head and encoder')
+
+        # ADD FPN support
+        group.add_argument('--yolov7-fpn',
+                           default=1, type=int,
+                           help='number of FPN levels')
+        group.add_argument('--yolov7-fpn-relative-strides',
+                           default=[1], nargs='+', type=int,
+                           help='Stride of FPN layers relative to final model layer')
+        group.add_argument('--yolov7-fpn-largest-interval',
+                           default=cls.largest_interval, type=int,
+                           help='Scale of targets for last layer')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
@@ -74,6 +119,10 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
         cls.imgsz = args.yolov7_img_size
         cls.upsample_stride = args.yolov7_upsample
         cls.device = args.device
+        cls.use_cifdet = args.yolov7_cifdet
+        cls.fpn = args.yolov7_fpn
+        cls.fpn_relative_strides = args.yolov7_fpn_relative_strides
+        cls.largest_interval = args.yolov7_fpn_largest_interval
 
     # def _preprocess(self):
     #     enc = openpifpaf.encoder.CifDet(self.head_metas[0])
@@ -119,13 +168,15 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     #     ])
 
     def _encoder(self):
-        # if self.use_cifdet:
-        #     enc = openpifpaf.encoder.CifDet(self.head_metas[0])
-        # else:
-        #     enc = ButterflyEncoder(self.head_metas[0])
-        enc = openpifpaf.encoder.CifDet(self.head_metas[0])
+        enc = []
+        for head_meta in self.head_metas:
+            if self.use_cifdet:
+                enc.append(openpifpaf.encoder.CifDet(head_meta))
+            else:
+                enc.append(ButterflyEncoder(head_meta))
+        # enc = openpifpaf.encoder.CifDet(self.head_metas[0])
 
-        return openpifpaf.transforms.Encoders([enc])
+        return openpifpaf.transforms.Encoders(enc)
 
     def train_loader(self):
         train_data = LoadImagesAndLabels(
@@ -135,7 +186,7 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
             rect=self.rect,  # rectangular training
             cache_images=self.cache_images,
             single_cls=self.single_cls,
-            stride=int(self.head_metas[0].stride),
+            stride=int(self.head_metas[-1].stride),
             image_weights=self.image_weights,
             prefix=colorstr('train: '),
             encoder=self._encoder(),
@@ -153,7 +204,7 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
             rect=True,  # rectangular training
             cache_images=self.cache_images,
             single_cls=self.single_cls,
-            stride=int(self.head_metas[0].stride),
+            stride=int(self.head_metas[-1].stride),
             image_weights=self.image_weights,
             pad=0.5,
             prefix=colorstr('val: '),

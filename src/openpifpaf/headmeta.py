@@ -17,12 +17,15 @@ class Base:
     head_index: int = field(default=None, init=False)
     base_stride: int = field(default=None, init=False)
     upsample_stride: int = field(default=1, init=False)
+    fpn_stride: int = field(default=1, init=False)
+    feature_index: int = field(default=0, init=False)
+    fpn_interval: List[float] = field(default_factory=lambda : [-1, float('inf')], init=False)
 
     @property
     def stride(self) -> int:
         if self.base_stride is None:
             return None
-        return self.base_stride // self.upsample_stride
+        return (self.base_stride // self.fpn_stride) // self.upsample_stride
 
     @property
     def n_fields(self) -> int:

@@ -49,7 +49,7 @@ class CifDetGenerator():
     def __call__(self, image, anns, meta):
         width_height_original = image.shape[2:0:-1]
 
-        detections = self.rescaler.detections(anns)
+        detections = self.rescaler.detections(anns, meta=self.config.meta)
         bg_mask = self.rescaler.bg_mask(anns, width_height_original,
                                         crowd_margin=(self.config.side_length - 1) / 2)
         valid_area = self.rescaler.valid_area(meta)
