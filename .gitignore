@@ -66,3 +66,4 @@ outputs
 all-images*
 pretrained
 pretrained/
+bd_debug

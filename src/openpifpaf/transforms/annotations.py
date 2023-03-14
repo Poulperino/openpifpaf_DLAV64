@@ -55,7 +55,10 @@ class NormalizeAnnotations(Preprocess):
             meta = {}
 
         # fill meta with defaults if not already present
-        w, h = image.size
+        if isinstance(image, torch.Tensor):
+            h, w = image.shape[1:]
+        else:
+            w, h = image.size
         meta_from_image = {
             'offset': np.array((0.0, 0.0)),
             'scale': np.array((1.0, 1.0)),

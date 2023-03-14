@@ -259,7 +259,6 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         }
 
 
-
         if mosaic:
             # Load mosaic
             if random.random() < 0.8:
@@ -281,12 +280,21 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         else:
             # Load image
             img, (h0, w0), (h, w) = load_image(self, index)
+            meta['valid_area'] = np.array((0.0, 0.0, w0, h0))
+            meta['width_height'] = np.array((w, h))
+            meta['offset'] = np.array((0.0, 0.0))
+            meta['scale'] = np.array((1.0, 1.0))
 
             # Letterbox
             shape = self.batch_shapes[self.batch[index]] if self.rect else self.img_size  # final letterboxed shape
             img, ratio, pad = letterbox(img, shape, auto=False, scaleup=self.augment)
             shapes = (h0, w0), ((h / h0, w / w0), pad)  # for COCO mAP rescaling
 
+            ltrb = np.array([pad[0], pad[1], pad[0], pad[1]])
+            meta['scale'][0] *= w/w0
+            meta['scale'][1] *= h/h0
+            meta['valid_area'][:2] += ltrb[:2]
+            meta['offset'] -= ltrb[:2]
             labels = self.labels[index].copy()
             if labels.size:  # normalized xywh to pixel xyxy format
                 labels[:, 1:] = xywhn2xyxy(labels[:, 1:], ratio[0] * w, ratio[1] * h, padw=pad[0], padh=pad[1])
@@ -371,9 +379,9 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         img = torch.from_numpy(img)
         img = img.float() / 255.0
         if self.encoder:
-            img, target, meta = self.encoder(img, anns, meta)
+            img, anns, meta = self.encoder(img, anns, meta)
 
-        return img, target, meta #self.img_files[index], shapes
+        return img, anns, meta #self.img_files[index], shapes
 
     @staticmethod
     def collate_fn(batch):

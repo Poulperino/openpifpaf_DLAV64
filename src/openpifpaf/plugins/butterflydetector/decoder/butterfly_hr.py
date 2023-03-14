@@ -42,9 +42,9 @@ def gaussian_radius(det_size, min_overlap=0.7):
 class ButterflyHr(object):
     v_threshold = 0.1
 
-    def __init__(self, scale_wh, pif_nn=None):
+    def __init__(self, pif_nn=None):
         self.pif_nn = pif_nn
-        self.scale_wh = scale_wh
+        # self.scale_wh = scale_wh
         self.target_accumulator = None
         self.scales = None
         self.scales_n = None
@@ -55,10 +55,10 @@ class ButterflyHr(object):
     def targets(self):
         return self.target_accumulator
 
-    def fill(self, pif, stride, min_scale=0.0):
-        return self.fill_multiple([pif], stride, min_scale)
+    def fill(self, pif, stride, scale_wh, min_scale=0.0):
+        return self.fill_multiple([pif], stride, scale_wh, min_scale)
 
-    def fill_multiple(self, pifs, stride, min_scale=0.0):
+    def fill_multiple(self, pifs, stride, scale_wh, min_scale=0.0):
         start = time.perf_counter()
 
         if self.target_accumulator is None:
@@ -82,7 +82,7 @@ class ButterflyHr(object):
             self.tas_n = np.zeros(shape, dtype=np.float32)
         else:
             ta = np.zeros(self.target_accumulator.shape, dtype=np.float32)
-        scale_div = {(k+1):10 for k in range(shape[0])}
+        scale_div = {(k+1):10 for k in range(pifs[0].shape[0])}
         for pif in pifs:
             #for field_numb, (t, ta_n, p, scale_w, scale_h, width, height, n_sw, n_sh, n_w, n_h) in enumerate(zip(ta, self.tas_n, pif, self.scales_w, self.scales_h, self.widths, self.heights, self.scalew_n, self.scaleh_n, self.width_n, self.height_n)):
             for field_numb, (t, p, scale_w, scale_h, width, height, n_sw, n_sh, n_w, n_h) in enumerate(zip(ta, pif, self.scales_w, self.scales_h, self.widths, self.heights, self.scalew_n, self.scaleh_n, self.width_n, self.height_n)):
@@ -95,8 +95,8 @@ class ButterflyHr(object):
                 y = y * stride
                 w = np.exp(w)
                 h = np.exp(h)
-                w = w * self.scale_wh
-                h = h * self.scale_wh
+                w = w * scale_wh
+                h = h * scale_wh
                 if np.isinf(w).any():
                     mask = np.logical_not(np.isinf(w))
                     x = x[mask]
@@ -125,8 +125,8 @@ class ButterflyHr(object):
                     pif_nn = self.pif_nn
                 else:
                     #pif_nn = np.clip((w/self.scale_wh)*(h/self.scale_wh), a_min=1, a_max= None)
-                    pif_nn_w = np.copy(np.clip(w/self.scale_wh, a_min=1, a_max= None))#.astype(np.int)
-                    pif_nn_h = np.copy(np.clip(h/self.scale_wh, a_min=1, a_max= None))#.astype(np.int)
+                    pif_nn_w = np.copy(np.clip(w/scale_wh, a_min=1, a_max= None))#.astype(np.int)
+                    pif_nn_h = np.copy(np.clip(h/scale_wh, a_min=1, a_max= None))#.astype(np.int)
                     #pif_nn_w[pif_nn_w>16] = pif_nn_w[pif_nn_w>16]*0.2
                     #pif_nn_h[pif_nn_h>16] = pif_nn_h[pif_nn_h>16]*0.2
                     pif_nn = np.clip(pif_nn_w*pif_nn_h, a_min=1, a_max= None)
@@ -148,12 +148,12 @@ class ButterflyHr(object):
         LOG.debug('target_intensities %.3fs', time.perf_counter() - start)
         return self
 
-    def fill_sequence(self, pifs, strides, min_scales):
+    def fill_sequence(self, pifs, strides, scale_whs, min_scales):
         if len(pifs) == 10:
-            for pif1, pif2, stride, min_scale in zip(pifs[:5], pifs[5:], strides, min_scales):
+            for pif1, pif2, stride, scale_wh, min_scale in zip(pifs[:5], pifs[5:], strides, scale_whs, min_scales):
                 self.fill_multiple([pif1, pif2], stride, min_scale=min_scale)
         else:
-            for pif, stride, min_scale in zip(pifs, strides, min_scales):
-                self.fill(pif, stride, min_scale=min_scale)
+            for pif, stride, scale_wh, min_scale in zip(pifs, strides, scale_whs, min_scales):
+                self.fill(pif, stride, scale_wh, min_scale=min_scale)
 
         return self

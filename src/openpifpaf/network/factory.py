@@ -341,8 +341,12 @@ class Factory(Configurable):
                     # base_stride attributes set.
                     head_metas[meta_i] = hn.meta
                 else:
-                    headnets.append(
-                            HEADS[meta.__class__](meta, net_cpu.base_net.out_features))
+                    if isinstance(net_cpu.base_net.out_features, list):
+                        headnets.append(
+                                HEADS[meta.__class__](meta, net_cpu.base_net.out_features[meta.feature_index]))
+                    else:
+                        headnets.append(
+                                HEADS[meta.__class__](meta, net_cpu.base_net.out_features))
             net_cpu.set_head_nets(headnets)
         else:
             raise Exception('head strategy {} unknown'.format(self.head_consolidation))

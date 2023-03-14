@@ -13,14 +13,14 @@ from .. import headmeta
 
 
 class Visualizer(Base):
-    def __init__(self, meta: headmeta.Butterfly):
+    def __init__(self, meta: headmeta.Butterfly, file_prefix=None):
         super().__init__(meta.name)
         self.meta = meta
         # self.butterfly_full = False
         # self.fields_indices = self.process_indices(fields_indices)
         # if self.fields_indices and self.fields_indices[0][0] == -1:
         #     self.butterfly_full = True
-        self.file_prefix = None
+        self.file_prefix = file_prefix
         # self.show_seed_confidence = show_seed_confidence
         # self.show = show
         # self.image = None
@@ -55,7 +55,7 @@ class Visualizer(Base):
         if len(field_indices)==1 and field_indices[0] == -1:
             field_indices = np.arange(len(self.meta.categories))
 
-        fig_file = self.file_prefix + '.butterfly.seeds.png' if self.file_prefix else None
+        fig_file = self.file_prefix + '.butterfly.scale'+str(io_scale)+'.seeds.png' if self.file_prefix else None
         with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
             cmap = matplotlib.cm.get_cmap('viridis_r')
             cnorm = matplotlib.colors.Normalize(vmin=0, vmax=1)
@@ -97,11 +97,11 @@ class Visualizer(Base):
             field_indices = np.arange(intensity_fields.shape[0])[np.nanmax(intensity_fields, axis=(1,2))>0.2]
 
         for f in field_indices:
-            print('butterfly confidence field - index', f)
-            fig_file = self.file_prefix + '.butterfly{}.c.png'.format(f) if self.file_prefix else None
+            print('butterfly confidence field - index', f, ' with scale', io_scale)
+            fig_file = self.file_prefix + '.butterfly{}.scale'.format(f)+str(io_scale)+'.c.png' if self.file_prefix else None
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
                 # ax.imshow(self.resized_image(io_scale))
-                im = ax.imshow(self.scale_scalar(intensity_fields[f], self.meta.stride), alpha=0.9,
+                im = ax.imshow(self.scale_scalar(intensity_fields[f], io_scale), alpha=0.9,
                                vmin=0.0, vmax=1.0, cmap='YlOrRd')
 
                 divider = make_axes_locatable(ax)
@@ -113,7 +113,7 @@ class Visualizer(Base):
 
         for f in field_indices:
             print('butterfly vector field - index', f)
-            fig_file = self.file_prefix + '.butterfly{}.v.png'.format(f) if self.file_prefix else None
+            fig_file = self.file_prefix + '.butterfly{}.scale'.format(f)+str(io_scale)+'.v.png' if self.file_prefix else None
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
                 # ax.imshow(self.image)
                 show.white_screen(ax, alpha=0.5)
@@ -121,14 +121,14 @@ class Visualizer(Base):
                             confidence_field=intensity_fields[f],
                             reg_uncertainty=reg_fields_b[f], uv_is_offset=True,
                             cmap='viridis_r', clim=(0.5, 1.0),
-                            threshold=0.1, xy_scale=self.meta.stride)
+                            threshold=0.1, xy_scale=io_scale)
 
                 # ax.get_xaxis().set_visible(False)
                 # ax.get_yaxis().set_visible(False)
 
         for f in field_indices:
             print('butterfly wh field - index', f)
-            fig_file = self.file_prefix + '.butterfly{}.w.png'.format(f) if self.file_prefix else None
+            fig_file = self.file_prefix + '.butterfly{}.scale'.format(f)+str(io_scale)+'.w.png' if self.file_prefix else None
             # with show.canvas(fig_file, show=self.show,) as ax:
             with self.image_canvas(self.processed_image(), margin=[0.0, 0.01, 0.05, 0.01]) as ax:
                 # ax.imshow(self.image)
@@ -136,7 +136,7 @@ class Visualizer(Base):
                 show.boxes_wh(ax, np.exp(width_fields[f]), np.exp(height_fields[f]), regression_field=reg_fields[f],
                             confidence_field=intensity_fields[f],
                             cmap='Greens', linewidth=2, regression_field_is_offset=True,
-                            xy_scale=self.meta.stride, fill=False)
+                            xy_scale=io_scale, fill=False)
 
                 # ax.get_xaxis().set_visible(False)
                 # ax.get_yaxis().set_visible(False)

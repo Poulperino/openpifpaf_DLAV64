@@ -234,9 +234,15 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
             rect=True,  # rectangular training
             cache_images=self.cache_images,
             single_cls=self.single_cls,
-            stride=int(self.head_metas[0].stride),
+            stride=int(self.head_metas[-1].stride),
             pad=0.5,
             prefix=colorstr('val: '),
+            encoder=openpifpaf.transforms.Compose([
+                openpifpaf.transforms.NormalizeAnnotations(),
+                openpifpaf.transforms.ToAnnotations([
+                    openpifpaf.transforms.ToDetAnnotations(self.data_dict['names']),
+                    openpifpaf.transforms.ToCrowdAnnotations(self.data_dict['names']),
+                ])]),
             device=self.device
         )
         return torch.utils.data.DataLoader(
@@ -245,4 +251,4 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
             collate_fn=openpifpaf.datasets.collate_images_anns_meta)
 
     def metrics(self):
-        pass
+        return []

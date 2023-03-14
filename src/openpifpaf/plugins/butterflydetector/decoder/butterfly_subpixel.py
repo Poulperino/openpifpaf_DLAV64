@@ -11,6 +11,7 @@ from .butterfly_hr import ButterflyHr
 from .butterfly_seeds import ButterflySeeds
 from ..utils import normalize_butterfly
 from .. import headmeta
+from ...yolov7.butterflyencoder import headmeta as headmeta_yolo
 from .visualizer import Visualizer
 LOG = logging.getLogger(__name__)
 
@@ -23,9 +24,9 @@ class Butterfly(Decoder):
 
     def __init__(self, head_metas: List[headmeta.Butterfly], *, visualizer=None):
 
-        stride = head_metas[0].stride
-        pif_index=0
-        head_names=head_metas[0].name
+        stride = [head_meta.stride for head_meta in head_metas]
+        pif_index= list(range(len(head_metas)))
+        head_names= [head_meta.name for head_meta in head_metas]
         pif_min_scale=0.0
         self.meta = head_metas[0]
         self.priority = -1.0  # prefer keypoints over detections
@@ -34,8 +35,8 @@ class Butterfly(Decoder):
         self.strides = stride
         self.scale_wh = stride
         self.pif_min_scales = pif_min_scale
-        if 'nsbutterfly' in head_names:
-            self.scale_wh = 1
+        # if 'nsbutterfly' in head_names:
+        #     self.scale_wh = 1
         self.pif_indices = pif_index
         if not isinstance(self.strides, (list, tuple)):
             self.strides = [self.strides]
@@ -58,36 +59,51 @@ class Butterfly(Decoder):
         # TODO: multi-scale
         decoder_meta = []
         for meta in head_metas:
-            if isinstance(meta, headmeta.Butterfly):
+            if isinstance(meta, headmeta.Butterfly) or isinstance(meta, headmeta_yolo.Butterfly):
                 decoder_meta.append(meta)
+
         return [
-            Butterfly(decoder_meta, visualizer=Visualizer(decoder_meta[0]))
+            Butterfly(decoder_meta, visualizer=Visualizer(decoder_meta[-1], file_prefix=cls.file_prefix))
         ]
 
+    @classmethod
+    def cli(cls, parser: argparse.ArgumentParser):
+        """Command line interface (CLI) to extend argument parser."""
+        parser.add_argument('--debug-file-prefix', default=None,
+                            help='save visualizer outputs')
     @classmethod
     def configure(cls, args: argparse.Namespace):
         """Take the parsed argument parser output and configure class variables."""
         # check consistency
-
         cls.seed_threshold = args.seed_threshold
+        cls.file_prefix = args.debug_file_prefix
 
     def __call__(self, fields, initial_annotations=None):
         start = time.perf_counter()
 
         if self.debug_visualizer:
+            import pdb; pdb.set_trace()
             for stride, pif_i in zip(self.strides, self.pif_indices):
                 self.debug_visualizer.butterfly_raw(fields[pif_i], stride)
 
         #to numpy
-        fields = [[field.cpu().numpy() for field in fields[0]]]
+        def apply(f, items):
+            """Apply f in a nested fashion to all items that are not list or tuple."""
+            if items is None:
+                return None
+            if isinstance(items, (list, tuple)):
+                return [apply(f, i) for i in items]
+            return f(items)
+        fields = apply(lambda x: x.numpy(), fields)
+        # fields = [[field.cpu().numpy() for field in fields[0]]]
 
         # normalize
         normalized_pifs = [normalize_butterfly(*fields[pif_i], fixed_scale=self.pif_fixed_scale)[0]
                            for pif_i in self.pif_indices]
 
         # pif hr
-        pifhr = ButterflyHr(self.scale_wh, self.pif_nn)
-        pifhr.fill_sequence(normalized_pifs, self.strides, self.pif_min_scales)
+        pifhr = ButterflyHr(self.pif_nn)
+        pifhr.fill_sequence(normalized_pifs, self.strides, self.scale_wh, self.pif_min_scales)
 
         # seeds
         seeds = ButterflySeeds(pifhr, self.seed_threshold,
