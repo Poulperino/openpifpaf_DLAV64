@@ -82,7 +82,6 @@ class Butterfly(Decoder):
         start = time.perf_counter()
 
         if self.debug_visualizer:
-            import pdb; pdb.set_trace()
             for stride, pif_i in zip(self.strides, self.pif_indices):
                 self.debug_visualizer.butterfly_raw(fields[pif_i], stride)
 

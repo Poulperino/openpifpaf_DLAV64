@@ -150,8 +150,8 @@ class CompositeLoss(torch.nn.Module):
         # target_scales = t[1 + self.n_vectors:1 + self.n_vectors + self.n_scales]
 
         target_intensity = t[:, :, 0]
-        target_regs = [t[:, :, 1+2*indx_vec:1+2*indx_vec + 2*self.n_vectors] for indx_vec in range(self.n_vectors)]
-        target_scales = t[:, :, 1 + self.n_vectors:1 + self.n_vectors + self.n_scales].permute(2,0,1,3,4)
+        target_regs = [t[:, :, 1+2*indx_vec:1+2*indx_vec + 2] for indx_vec in range(self.n_vectors)]
+        target_scales = t[:, :, 1 + 2*self.n_vectors:1 + 2*self.n_vectors + self.n_scales].permute(2,0,1,3,4)
 
         # bce_masks = (target_intensity[:, :-1] + target_intensity[:, -1:]) > 0.5
         bce_masks = torch.isnan(target_intensity).bitwise_not_()
@@ -252,7 +252,6 @@ class CompositeLoss(torch.nn.Module):
         repgt_losses = []
         repbbox_losses = []
         if self.iou_loss>0 or self.repulsion_loss:
-            import pdb; pdb.set_trace()
             if self.repulsion_loss:
                 fields_ids = t[-1]
             for i, (x_reg, target_reg) in enumerate(zip(x_regs, target_regs)):
