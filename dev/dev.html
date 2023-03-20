@@ -1,49 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Contribute &#8212; OpenPifPaf Guide DEV</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystyle.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -51,62 +62,94 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev';</script>
     <link rel="shortcut icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Performance" href="performance.html" />
     <link rel="prev" title="Bibliography" href="bibliography.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">OpenPifPaf Guide DEV</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -115,438 +158,270 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Getting Started
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="predict_cli.html">
-   Prediction
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="examples.html">
-   Examples
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="predict_cli.html">Prediction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Chapters
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="predict_api.html">
-   Prediction API
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="compute.html">
-   Compute
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="models.html">
-   Models
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="datasets.html">
-   Datasets
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="train.html">
-   Training
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="cli_help.html">
-   Command Line
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_overview.html">
-   Plugins
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="faq.html">
-   FAQ
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="predict_api.html">Prediction API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compute.html">Compute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="train.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli_help.html">Command Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_overview.html">Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Tutorials
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_custom.html">
-   Custom Dataset
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_animalpose.html">
-   Animal Keypoints
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_wholebody.html">
-   WholeBody
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_apollocar3d.html">
-   Car Keypoints
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_crowdpose.html">
-   CrowdPose
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_nuscenes.html">
-   NuScenes 2D detection
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="tutorial_opencv.html">
-   OpenCV
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="plugins_cifar10.html">
-   Cifar10
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_custom.html">Custom Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_animalpose.html">Animal Keypoints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_wholebody.html">WholeBody</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_apollocar3d.html">Car Keypoints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_crowdpose.html">CrowdPose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_nuscenes.html">NuScenes 2D detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_opencv.html">OpenCV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plugins_cifar10.html">Cifar10</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Reference
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="moduledocs.html">
-   Modules
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="bibliography.html">
-   Bibliography
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="moduledocs.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Development
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Contribute
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="performance.html">
-   Performance
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference external" href="https://github.com/vita-epfl/openpifpaf">
-   GitHub
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/vita-epfl/openpifpaf">GitHub</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            This is the dev version of the Guide. Here is the <a href="https://vita-epfl.github.io/openpifpaf">stable version</a>.
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
-          
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
 
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
 <div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
 
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
     </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/vita-epfl/openpifpaf/main?urlpath=tree/guide/dev.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/vita-epfl/openpifpaf/main?urlpath=tree/guide/dev.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   
     <img src="_static/images/logo_binder.svg">
   </span>
-<span class="headerbtn__text-container">Binder</span>
+<span class="btn__text-container">Binder</span>
 </a>
-
-      </li>
+</li>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/vita-epfl/openpifpaf"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/vita-epfl/openpifpaf" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-<span class="headerbtn__text-container">repository</span>
+<span class="btn__text-container">Repository</span>
 </a>
-
-      </li>
+</li>
       
-      <li>
-        <a href="https://github.com/vita-epfl/openpifpaf/issues/new?title=Issue%20on%20page%20%2Fdev.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
+      
+      
+      
+      <li><a href="https://github.com/vita-epfl/openpifpaf/issues/new?title=Issue%20on%20page%20%2Fdev.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-lightbulb"></i>
   </span>
-<span class="headerbtn__text-container">open issue</span>
+<span class="btn__text-container">Open issue</span>
 </a>
-
-      </li>
+</li>
       
-    </ul>
-  </div>
+  </ul>
 </div>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="_sources/dev.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/dev.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</li>
+      
+      
+      
       
       <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</li>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
 
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> On this page
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#modify-code">
-   Modify Code
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#things-to-contribute">
-   Things to Contribute
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#missing-dependencies">
-   Missing Dependencies
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#your-project-and-openpifpaf">
-   Your Project and OpenPifPaf
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#build-guide">
-   Build Guide
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#build-environment">
-   Build Environment
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Contribute</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> On this page </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#modify-code">
-   Modify Code
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#things-to-contribute">
-   Things to Contribute
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#missing-dependencies">
-   Missing Dependencies
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#your-project-and-openpifpaf">
-   Your Project and OpenPifPaf
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#build-guide">
-   Build Guide
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#build-environment">
-   Build Environment
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Contribute</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-code">Modify Code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-contribute">Things to Contribute</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-dependencies">Missing Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-project-and-openpifpaf">Your Project and OpenPifPaf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-guide">Build Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-environment">Build Environment</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="contribute">
-<h1>Contribute<a class="headerlink" href="#contribute" title="Permalink to this headline">#</a></h1>
+<h1>Contribute<a class="headerlink" href="#contribute" title="Permalink to this heading">#</a></h1>
 <p>Before we can accept contributions, you need to become a CLAed contributor.
 E-mail a signed copy of the
 <a class="reference external" href="https://github.com/vita-epfl/openpifpaf/blob/main/docs/CLAI.txt">CLAI</a>
@@ -554,7 +429,7 @@ E-mail a signed copy of the
 <a class="reference external" href="https://github.com/vita-epfl/openpifpaf/blob/main/docs/CLAC.txt">CLAC</a>)
 as PDF file to <a class="reference external" href="mailto:epfl&#46;vita&#37;&#52;&#48;gmail&#46;com">epfl<span>&#46;</span>vita<span>&#64;</span>gmail<span>&#46;</span>com</a>.</p>
 <section id="modify-code">
-<span id="id1"></span><h2>Modify Code<a class="headerlink" href="#modify-code" title="Permalink to this headline">#</a></h2>
+<span id="id1"></span><h2>Modify Code<a class="headerlink" href="#modify-code" title="Permalink to this heading">#</a></h2>
 <p>This version of OpenPifPaf (<code class="docutils literal notranslate"><span class="pre">openpifpaf-vita</span></code>) cannot co-exist with the original one (<a class="reference external" href="https://github.com/openpifpaf/openpifpaf"><code class="docutils literal notranslate"><span class="pre">openpifpaf</span></code></a>) in the same environment. If you have previously installed the package <code class="docutils literal notranslate"><span class="pre">openpifpaf</span></code>, remove it before installation to avoid conflicts.</p>
 <p>For development of the openpifpaf source code itself, you need to clone this repository and then:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>--editable<span class="w"> </span><span class="s1">&#39;.[dev,train,test]&#39;</span>
@@ -578,7 +453,7 @@ pytest<span class="w"> </span>--nbval-lax<span class="w"> </span>--current-env<s
 </div>
 </section>
 <section id="things-to-contribute">
-<h2>Things to Contribute<a class="headerlink" href="#things-to-contribute" title="Permalink to this headline">#</a></h2>
+<h2>Things to Contribute<a class="headerlink" href="#things-to-contribute" title="Permalink to this heading">#</a></h2>
 <p>This is a research project and changing fast. Contributions can be in many areas:</p>
 <ul class="simple">
 <li><p>Add a new dataset?</p></li>
@@ -595,7 +470,7 @@ pytest<span class="w"> </span>--nbval-lax<span class="w"> </span>--current-env<s
 </ul>
 </section>
 <section id="missing-dependencies">
-<h2>Missing Dependencies<a class="headerlink" href="#missing-dependencies" title="Permalink to this headline">#</a></h2>
+<h2>Missing Dependencies<a class="headerlink" href="#missing-dependencies" title="Permalink to this heading">#</a></h2>
 <p>OpenPifPaf has few core requirements so that you can run it efficiently on servers without graphical interface.
 Sometimes, you just want to install all possible dependencies. Those are provided as “extra” requirements.
 Use the following <code class="docutils literal notranslate"><span class="pre">pip3</span></code> command to install all extras.</p>
@@ -608,13 +483,13 @@ Use the following <code class="docutils literal notranslate"><span class="pre">p
 </div>
 </section>
 <section id="your-project-and-openpifpaf">
-<h2>Your Project and OpenPifPaf<a class="headerlink" href="#your-project-and-openpifpaf" title="Permalink to this headline">#</a></h2>
+<h2>Your Project and OpenPifPaf<a class="headerlink" href="#your-project-and-openpifpaf" title="Permalink to this heading">#</a></h2>
 <p>Let us know about your open source projects. We would like to feature them in our “related projects” section.</p>
 <p>The simplest way to integrate with OpenPifPaf is to write a plugin. If some functionality is not possible through our plugin architecture, open an issue to discuss and if necessary send us a pull request that enables the missing feature you need.</p>
 <p>If you do need to make a copy of OpenPifPaf, you must respect our license.</p>
 </section>
 <section id="build-guide">
-<h2>Build Guide<a class="headerlink" href="#build-guide" title="Permalink to this headline">#</a></h2>
+<h2>Build Guide<a class="headerlink" href="#build-guide" title="Permalink to this heading">#</a></h2>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>jupyter-book
 <span class="nb">cd</span><span class="w"> </span>guide
 jb<span class="w"> </span>build<span class="w"> </span>.
@@ -632,7 +507,7 @@ Jupyter Notebook before executing jupyter-book
 Only use this operation on a discardable copy as <code class="docutils literal notranslate"><span class="pre">jq</span></code> changes all formatting.</p>
 </section>
 <section id="build-environment">
-<span id="id2"></span><h2>Build Environment<a class="headerlink" href="#build-environment" title="Permalink to this headline">#</a></h2>
+<span id="id2"></span><h2>Build Environment<a class="headerlink" href="#build-environment" title="Permalink to this heading">#</a></h2>
 <p>Below are information about the system that built this guide and all examples
 in it. To debug an issue, it can be helpful to run these commands on your
 system and see what is different.</p>
@@ -644,88 +519,87 @@ pip freeze
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alabaster==0.7.13
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>accessible-pygments==0.0.3
+alabaster==0.7.13
 anyio==3.6.2
 argon2-cffi==21.3.0
 argon2-cffi-bindings==21.2.0
+arrow==1.2.3
 astroid==2.6.6
-attrs==21.4.0
-Babel==2.11.0
+attrs==22.2.0
+Babel==2.12.1
 backcall==0.2.0
-beautifulsoup4==4.11.2
+beautifulsoup4==4.12.0
 bleach==6.0.0
 certifi==2022.12.7
 cffi==1.15.1
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
 click==8.1.3
 colorama==0.4.6
 comm==0.1.2
 contourpy==1.0.7
-coverage==7.1.0
+coverage==7.2.2
 cpplint==1.6.1
 cycler==0.11.0
 debugpy==1.6.6
 decorator==5.1.1
 defusedxml==0.7.1
-docutils==0.17.1
+docutils==0.18.1
 entrypoints==0.4
-exceptiongroup==1.1.0
-fastjsonschema==2.16.2
+exceptiongroup==1.1.1
+fastjsonschema==2.16.3
 flameprof==0.4
-fonttools==4.38.0
+fonttools==4.39.2
+fqdn==1.5.1
 gitdb==4.0.10
-GitPython==3.1.30
+GitPython==3.1.31
 greenlet==2.0.2
 idna==3.4
 imagesize==1.4.1
-importlib-metadata==6.0.0
-importlib-resources==5.10.2
+importlib-metadata==6.1.0
+importlib-resources==5.12.0
 iniconfig==2.0.0
-ipykernel==6.20.2
+ipykernel==6.22.0
 ipython==7.34.0
-ipython-genutils==0.2.0
-ipywidgets==7.7.2
+isoduration==20.11.0
 isort==5.12.0
 jedi==0.18.2
 Jinja2==3.1.2
-jsonschema==3.2.0
-jupyter-book==0.13.1
-jupyter-cache==0.4.3
+jsonpointer==2.3
+jsonschema==4.17.3
+jupyter-book==0.15.1
+jupyter-cache==0.5.0
 jupyter-events==0.6.3
 jupyter-server-mathjax==0.2.6
-jupyter-sphinx==0.3.2
-jupyter_client==8.0.2
-jupyter_core==5.2.0
-jupyter_server==2.2.0
+jupyter_client==8.1.0
+jupyter_core==5.3.0
+jupyter_server==2.5.0
 jupyter_server_terminals==0.4.4
 jupyterlab-pygments==0.2.2
-jupyterlab-widgets==1.1.1
 kiwisolver==1.4.4
 latexcodec==2.0.1
 lazy-object-proxy==1.9.0
-linkify-it-py==1.0.3
+linkify-it-py==2.0.0
 lxml==4.9.2
-markdown-it-py==1.1.0
+markdown-it-py==2.2.0
 MarkupSafe==2.1.2
-matplotlib==3.6.3
+matplotlib==3.7.1
 matplotlib-inline==0.1.6
 mccabe==0.6.1
-mdit-py-plugins==0.2.8
+mdit-py-plugins==0.3.5
+mdurl==0.1.2
 mistune==0.8.4
-myst-nb==0.13.2
-myst-parser==0.15.2
-nbclassic==0.5.1
+myst-nb==0.17.1
+myst-parser==0.18.1
 nbclient==0.5.13
 nbconvert==6.5.4
 nbdime==3.1.1
-nbformat==5.7.3
+nbformat==5.8.0
 nbstripout==0.6.1
 nbval==0.10.0
 nest-asyncio==1.5.6
-notebook==6.5.2
-notebook_shim==0.2.2
-numpy==1.24.1
-opencv-python==4.7.0.68
+numpy==1.24.2
+opencv-python==4.7.0.72
 openpifpaf-vita @ file:///home/runner/work/openpifpaf/openpifpaf
 packaging==23.0
 pandocfilters==1.5.0
@@ -733,48 +607,49 @@ parso==0.8.3
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==9.4.0
-platformdirs==2.6.2
+pkgutil_resolve_name==1.3.10
+platformdirs==3.1.1
 pluggy==1.0.0
 prometheus-client==0.16.0
-prompt-toolkit==3.0.36
+prompt-toolkit==3.0.38
 psutil==5.9.4
 ptyprocess==0.7.0
 pybtex==0.24.0
 pybtex-docutils==1.0.2
 pycodestyle==2.10.0
 pycparser==2.21
-pydata-sphinx-theme==0.8.1
+pydata-sphinx-theme==0.13.1
 Pygments==2.14.0
 pylint==2.9.3
 pyparsing==3.0.9
 pyrsistent==0.19.3
 pysparkling==0.6.2
-pytest==7.2.1
+pytest==7.2.2
 python-dateutil==2.8.2
-python-json-logger==2.0.4
+python-json-logger==2.0.7
 pytz==2022.7.1
 PyYAML==6.0
-pyzmq==25.0.0
+pyzmq==25.0.2
 requests==2.28.2
 rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
-scipy==1.10.0
+scipy==1.10.1
 Send2Trash==1.8.0
 six==1.16.0
 smmap==5.0.0
 sniffio==1.3.0
 snowballstemmer==2.2.0
-soupsieve==2.3.2.post1
-Sphinx==4.5.0
-sphinx-book-theme==0.3.3
+soupsieve==2.4
+Sphinx==5.0.2
+sphinx-book-theme==1.0.0
 sphinx-comments==0.0.3
 sphinx-copybutton==0.5.1
-sphinx-external-toc==0.2.4
-sphinx-jupyterbook-latex==0.4.7
+sphinx-jupyterbook-latex==0.5.2
 sphinx-multitoc-numbering==0.1.3
-sphinx-thebe==0.1.2
+sphinx-thebe==0.2.1
 sphinx-togglebutton==0.3.2
-sphinx_design==0.1.0
+sphinx_design==0.3.0
+sphinx_external_toc==0.3.1
 sphinxcontrib-applehelp==1.0.4
 sphinxcontrib-bibtex==2.5.0
 sphinxcontrib-devhelp==1.0.2
@@ -782,7 +657,7 @@ sphinxcontrib-htmlhelp==2.0.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
-SQLAlchemy==1.4.46
+SQLAlchemy==1.4.47
 tabulate==0.9.0
 terminado==0.17.1
 thop==0.1.1.post2209072238
@@ -793,15 +668,16 @@ torch==1.9.0+cpu
 torchvision==0.10.0+cpu
 tornado==6.2
 traitlets==5.9.0
-typing_extensions==4.4.0
+typing_extensions==4.5.0
 uc-micro-py==1.0.1
-urllib3==1.26.14
+uri-template==1.2.0
+urllib3==1.26.15
 wcwidth==0.2.6
+webcolors==1.12
 webencodings==0.5.1
-websocket-client==1.5.0
-widgetsnbextension==3.6.1
+websocket-client==1.5.1
 wrapt==1.12.1
-zipp==3.12.0
+zipp==3.15.0
 </pre></div>
 </div>
 </div>
@@ -814,7 +690,7 @@ python -m openpifpaf.predict --version
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OpenPifPaf 0.14.0+16.g5be8d6e
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OpenPifPaf 0.14.0+19.g4cea229
 </pre></div>
 </div>
 </div>
@@ -847,9 +723,7 @@ Codecs:
  ....L. = Lossy compression
  .....S = Lossless compression
  -------
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> D.VI.S 012v                 Uncompressed 4:2:2 10-bit
+ D.VI.S 012v                 Uncompressed 4:2:2 10-bit
  D.V.L. 4xm                  4X Movie
  D.VI.S 8bps                 QuickTime 8BPS video
  .EVIL. a64_multi            Multicolor charset for Commodore 64 (encoders: a64multi )
@@ -1358,7 +1232,7 @@ Codecs:
             mode: "python"
         },
         kernelOptions: {
-            kernelName: "python3",
+            name: "python3",
             path: "./."
         },
         predefinedOutput: true
@@ -1366,54 +1240,104 @@ Codecs:
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="bibliography.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Bibliography</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="bibliography.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="performance.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="performance.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Performance</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By <a href="https://www.epfl.ch/labs/vita/">EPFL VITA</a> and <a href="https://github.com/vita-epfl/openpifpaf/graphs/contributors">contributors</a>.<br/>
-  
-      &copy; Copyright 2020-2022.<br/>
-    <div class="extra_footer">
-      <p>Powered by <a href="https://jupyterbook.org/">Jupyter Book</a>.</p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-    </div>
-</p>
-        </footer>
-    </div>
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modify-code">Modify Code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#things-to-contribute">Things to Contribute</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-dependencies">Missing Dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-project-and-openpifpaf">Your Project and OpenPifPaf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-guide">Build Guide</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-environment">Build Environment</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner">
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
     
-</div>
+<p class="component-author">
+By <a href="https://www.epfl.ch/labs/vita/">EPFL VITA</a> and <a href="https://github.com/vita-epfl/openpifpaf/graphs/contributors">contributors</a>.
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2020-2023.
+      <br/>
+    
+  </p>
 
-      </div>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div></div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
