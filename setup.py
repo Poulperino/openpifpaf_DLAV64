@@ -78,16 +78,15 @@ setuptools.setup(
     ext_modules=EXTENSIONS,
     zip_safe=False,
 
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=[
         'importlib_metadata!=3.8.0',  # temporary for pytest
         'numpy>=1.16',
         'pysparkling',  # for log analysis
         'python-json-logger',
-        'torch==1.9.0',
-        'torchvision==0.10.0',
+        'torch>=1.9.0',
+        'torchvision>=0.10.0',
         'pillow!=8.3.0',  # exclusion torchvision 0.10.0 compatibility
-        'dataclasses; python_version<"3.7"',
     ],
     extras_require={
         'backbones': [
@@ -107,13 +106,11 @@ setuptools.setup(
         ],
         'onnx': [
             'onnx',
-            'onnxruntime',
-            'onnx-simplifier>=0.2.9; python_version<"3.9"',  # Python 3.9 not supported yet
+            'onnxruntime; python_version<="3.9"',
             'protobuf<4',  # temporary explicit dependency until tests pass again
         ],
         'coreml': [
             'coremltools>=5.0b3',
-            'numpy<1.24',  # for coremltools compatibility
         ],
         'test': [
             'cpplint',
@@ -130,9 +127,10 @@ setuptools.setup(
         ],
         'train': [
             'matplotlib>=3.3',  # required by pycocotools
-            'pycocotools>=2.0.1,!=2.0.5,!=2.0.6',  # pre-install cython (currently incompatible with numpy 1.18 or above)
+            #'pycocotools>=2.0.1,!=2.0.5,!=2.0.6',  # pre-install cython (currently incompatible with numpy 1.18 or above)
+            'pycocotools',
             'scipy',
-            'xtcocotools>=1.5; sys_platform == "linux"',  # required for wholebody eval, only wheels and only for linux on pypi
+            'xtcocotools>=1.5; sys_platform == "linux"',  # pre-install numpy. required for wholebody eval, only wheels and only for linux on pypi
         ],
     },
 )
