@@ -1,7 +1,7 @@
 # Book settings
 title: OpenPifPaf Guide DEV
 author: <a href="https://www.epfl.ch/labs/vita/">EPFL VITA</a> and <a href="https://github.com/vita-epfl/openpifpaf/graphs/contributors">contributors</a>.
-copyright: "2020-2022"
+copyright: "2020-2023"
 email: epfl.vita@gmail.com
 logo: logo.png
 exclude_patterns: [readme.md]
