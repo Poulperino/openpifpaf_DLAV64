@@ -18,7 +18,8 @@ from .tracking_base import TrackingBase
 # if hasattr(torchvision.models, 'mobilenetv2') \
 #    and not hasattr(torchvision.models.mobilenet, 'ConvBNReLU'):
 #     torchvision.models.mobilenet.ConvBNReLU = torchvision.models.mobilenetv2.ConvBNReLU
-#     torchvision.models.mobilenet.InvertedResidual = torchvision.models.mobilenetv2.InvertedResidual
+#     torchvision.models.mobilenet.InvertedResidual = \
+#         torchvision.models.mobilenetv2.InvertedResidual
 
 
 # generate hash values with: shasum -a 256 filename.pkl

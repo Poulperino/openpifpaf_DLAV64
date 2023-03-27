@@ -5,6 +5,7 @@ import glob
 import json
 import logging
 import os
+import platform
 
 import torch
 
@@ -98,6 +99,10 @@ def out_name(arg, in_name, default_extension):
 
 def main():
     args = cli()
+
+    LOG.info('Running Python %s', platform.python_version())
+    LOG.info('Running PyTorch %s', torch.__version__)
+
     annotation_painter = show.AnnotationPainter()
 
     predictor = Predictor(

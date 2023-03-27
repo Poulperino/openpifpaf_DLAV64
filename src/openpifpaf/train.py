@@ -5,6 +5,7 @@ import copy
 import datetime
 import logging
 import os
+import platform
 import socket
 
 import torch
@@ -144,6 +145,9 @@ def cli():
 
 def main():
     args = cli()
+
+    LOG.info('Running Python %s', platform.python_version())
+    LOG.info('Running PyTorch %s', torch.__version__)
 
     datamodule = datasets.factory(args.dataset)
 

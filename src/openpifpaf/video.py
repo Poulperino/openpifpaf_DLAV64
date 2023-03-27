@@ -22,6 +22,7 @@ import argparse
 import json
 import logging
 import os
+import platform
 import time
 
 import torch
@@ -108,6 +109,9 @@ def cli():  # pylint: disable=too-many-statements,too-many-branches
 
 def main():
     args = cli()
+
+    LOG.info('Running Python %s', platform.python_version())
+    LOG.info('Running PyTorch %s', torch.__version__)
 
     Predictor.loader_workers = 1
     predictor = Predictor(

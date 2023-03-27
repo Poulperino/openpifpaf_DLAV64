@@ -6,6 +6,7 @@ import glob
 import json
 import logging
 import os
+import platform
 import sys
 import time
 
@@ -250,6 +251,9 @@ def watch(args):
 
 def main():
     args = cli()
+
+    LOG.info('Running Python %s', platform.python_version())
+    LOG.info('Running PyTorch %s', torch.__version__)
 
     if args.watch:
         watch(args)
