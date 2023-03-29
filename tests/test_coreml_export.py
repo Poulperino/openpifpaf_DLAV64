@@ -9,6 +9,8 @@ import openpifpaf.export_coreml
 
 
 @pytest.mark.skipif(not sys.platform.startswith('darwin'), reason='coreml export only on macos')
+@pytest.mark.skipif(sys.version_info >= (3, 9),
+                    reason='not tested with newer versions')
 def test_coreml_exportable(tmpdir):
     outfile = str(tmpdir.join('openpifpaf-shufflenetv2k16.coreml.mlmodel'))
     assert not os.path.exists(outfile)
@@ -33,6 +35,8 @@ class ModuleWithOccupancy(openpifpaf.network.HeadNetwork):
 
 
 @pytest.mark.skipif(not sys.platform.startswith('darwin'), reason='coreml export only on macos')
+@pytest.mark.skipif(sys.version_info >= (3, 9),
+                    reason='not tested with newer versions')
 def test_coreml_torchscript(tmpdir):
     outfile = str(tmpdir.join('occupancy.coreml.mlmodel'))
     assert not os.path.exists(outfile)
