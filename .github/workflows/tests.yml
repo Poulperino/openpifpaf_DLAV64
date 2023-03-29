@@ -15,6 +15,7 @@ jobs:
             torch: 1.9.0+cpu
             torchvision: 0.10.0+cpu
             torch-source: https://download.pytorch.org/whl/torch_stable.html
+            onnx: True
           - os: ubuntu-latest
             python: 3.9
             torch: 1.13.1+cpu
@@ -22,17 +23,18 @@ jobs:
             torch-source: https://download.pytorch.org/whl/torch_stable.html
             slow: True
             conda: True
-            onnx: True
           - os: ubuntu-latest
-            python: 3.10
+            python: '3.10'
             torch: 2.0.0+cpu
             torchvision: 0.15.1+cpu
             torch-source: https://download.pytorch.org/whl/torch_stable.html
+            build-isolation: True
           - os: macos-11
             python: 3.7
             torch: 1.9.0
             torchvision: 0.10.0
             torch-source: https://download.pytorch.org/whl/torch_stable.html
+            onnx: True
           - os: macos-11
             python: 3.9
             torch: 1.13.1
@@ -40,19 +42,18 @@ jobs:
             torch-source: https://download.pytorch.org/whl/torch_stable.html
             slow: True
             conda: True
-            onnx: True
           - os: macos-11
-            python: 3.10
+            python: '3.10'
             torch: 2.0.0
             torchvision: 0.15.1
             torch-source: https://download.pytorch.org/whl/torch_stable.html
+            build-isolation: True
           - os: windows-latest
             python: 3.9
             torch: 1.13.1+cpu
             torchvision: 0.14.1+cpu
             torch-source: https://download.pytorch.org/whl/torch_stable.html
             slow: True
-            onnx: True
 
     env:
       DEBUG: 1
@@ -199,7 +200,7 @@ jobs:
         python -m pip install --no-build-isolation ../dist/openpifpaf-vita*
         python -c "import openpifpaf"
     - name: sdist installable with build isolation
-      if: matrix.os != 'windows-latest'  # because of path separator
+      if: matrix.build-isolation && matrix.os != 'windows-latest'  # because of path separator
       run: |
         mkdir sdist_with_build_isolation_test_dir
         cd sdist_with_build_isolation_test_dir

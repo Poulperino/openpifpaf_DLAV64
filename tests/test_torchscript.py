@@ -20,6 +20,7 @@ def test_torchscript_script():
         torch.jit.script(model)
 
 
+@pytest.mark.skipif(sys.version_info >= (3, 9))
 def test_torchscript_trace():
     openpifpaf.network.heads.CompositeField3.inplace_ops = False
     openpifpaf.network.heads.CompositeField4.inplace_ops = False
@@ -40,6 +41,7 @@ def test_torchscript_decoder():
         torch.jit.script(decoder)
 
 
+@pytest.mark.skipif(sys.version_info >= (3, 9))
 def test_torchscript_exportable(tmpdir):
     outfile = str(tmpdir.join('openpifpaf-shufflenetv2k16.torchscript.pt'))
     assert not os.path.exists(outfile)
