@@ -15,19 +15,19 @@ jobs:
   deploy-guide:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     - name: Cache checkpoints and data
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cache
           data-cifar10
         key: ${{ runner.os }}-${{ hashFiles('setup.py') }}
 
-    - uses: FedericoCarboni/setup-ffmpeg@v1
+    - uses: FedericoCarboni/setup-ffmpeg@v2
       id: setup-ffmpeg
 
     - name: Set up Python 3.9
