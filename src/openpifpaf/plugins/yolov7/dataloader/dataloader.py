@@ -8,6 +8,7 @@ from ..utils.general import colorstr, check_img_size, check_dataset
 from .dataset import LoadImagesAndLabels
 from ..butterflyencoder.butterfly import Butterfly as ButterflyEncoder
 from ..butterflyencoder.headmeta import Butterfly
+from ...butterflydetector.datasets.metric import AerialMetric
 
 class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -251,4 +252,4 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
             collate_fn=openpifpaf.datasets.collate_images_anns_meta)
 
     def metrics(self):
-        return []
+        return [AerialMetric(dataset=self.data_dict['dataset'])]

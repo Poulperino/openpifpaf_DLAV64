@@ -2,7 +2,7 @@
 
 # download command/URL (optional)
 # download: bash ./scripts/get_coco.sh
-
+dataset: visdrone
 # train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
 train: ./data/VisDrone2019/yolo/train.txt  # 118287 images
 val: ./data/VisDrone2019/yolo/val.txt  # 5000 images

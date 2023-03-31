@@ -82,7 +82,7 @@ class ButterflyHr(object):
             self.tas_n = np.zeros(shape, dtype=np.float32)
         else:
             ta = np.zeros(self.target_accumulator.shape, dtype=np.float32)
-        scale_div = {(k+1):10 for k in range(pifs[0].shape[0])}
+        scale_div = {(k+1):5 for k in range(pifs[0].shape[0])}
         for pif in pifs:
             #for field_numb, (t, ta_n, p, scale_w, scale_h, width, height, n_sw, n_sh, n_w, n_h) in enumerate(zip(ta, self.tas_n, pif, self.scales_w, self.scales_h, self.widths, self.heights, self.scalew_n, self.scaleh_n, self.width_n, self.height_n)):
             for field_numb, (t, p, scale_w, scale_h, width, height, n_sw, n_sh, n_w, n_h) in enumerate(zip(ta, pif, self.scales_w, self.scales_h, self.widths, self.heights, self.scalew_n, self.scaleh_n, self.width_n, self.height_n)):
