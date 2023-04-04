@@ -23,7 +23,7 @@ class CompositeLoss(torch.nn.Module):
             regression_loss = SmoothL1Loss(r_smooth)
         elif self.reg_loss_name == 'l1':
             regression_loss = l1_loss
-        elif self.reg_loss_name == 'laplace' or reg_loss_name == 'laplace_focal':
+        elif self.reg_loss_name == 'laplace' or self.reg_loss_name == 'laplace_focal':
             regression_loss = laplace_loss
         elif self.reg_loss_name == 'laplace_iou':
             regression_loss = laplace_loss
@@ -55,6 +55,7 @@ class CompositeLoss(torch.nn.Module):
         self.n_vectors = n_vectors
         self.n_scales = n_scales
         self.iou_loss = iou_loss
+
         if not ('butterfly' in head_name or 'repulse' in head_name):
             self.scales_butterfly = None
         if self.n_scales and not ('butterfly' in head_name or 'repulse' in head_name):
@@ -66,6 +67,8 @@ class CompositeLoss(torch.nn.Module):
             scales_butterfly = torch.unsqueeze(scales_butterfly, -1)
             scales_butterfly = torch.unsqueeze(scales_butterfly, -1)
             self.register_buffer('scales_butterfly', scales_butterfly)
+        else:
+            self.scales_butterfly = None
 
         if sigmas is None:
             sigmas = [[1.0] for _ in range(n_vectors)]
@@ -108,16 +111,16 @@ class CompositeLoss(torch.nn.Module):
                   head_name, n_vectors, n_scales, len(sigmas), margin)
 
     def cli(parser):
-        # group = parser.add_argument_group('losses')
-        pass
+        group = parser.add_argument_group('Butterfly losses')
+        # pass
         # group.add_argument('--lambdas', default=[30.0, 2.0, 2.0, 50.0, 3.0, 3.0],
         #                    type=float, nargs='+',
         #                    help='prefactor for head losses')
         # group.add_argument('--r-smooth', type=float, default=0.0,
         #                    help='r_{smooth} for SmoothL1 regressions')
-        # group.add_argument('--regression-loss', default='laplace',
-        #                    choices=['smoothl1', 'smootherl1', 'l1', 'laplace', 'laplace_iou', 'laplace_siou', 'iou_only', 'siou_only', 'laplace_focal'],
-        #                    help='type of regression loss')
+        group.add_argument('--bf-regression-loss', default='laplace',
+                           choices=['smoothl1', 'smootherl1', 'l1', 'laplace', 'laplace_iou', 'laplace_siou', 'iou_only', 'siou_only', 'laplace_focal'],
+                           help='type of regression loss')
         # group.add_argument('--background-weight', default=1.0, type=float,
         #                    help='[experimental] BCE weight of background')
         # group.add_argument('--margin-loss', default=False, action='store_true',
@@ -127,7 +130,7 @@ class CompositeLoss(torch.nn.Module):
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
-        cls.reg_loss_name = args.regression_loss
+        cls.reg_loss_name = args.bf_regression_loss
 
     def forward(self, *args):  # pylint: disable=too-many-statements
         LOG.debug('loss for %s', self.field_names)
@@ -148,7 +151,6 @@ class CompositeLoss(torch.nn.Module):
         # target_intensity = t[0]
         # target_regs = t[1:1 + self.n_vectors]
         # target_scales = t[1 + self.n_vectors:1 + self.n_vectors + self.n_scales]
-
         target_intensity = t[:, :, 0]
         target_regs = [t[:, :, 1+2*indx_vec:1+2*indx_vec + 2] for indx_vec in range(self.n_vectors)]
         target_scales = t[:, :, 1 + 2*self.n_vectors:1 + 2*self.n_vectors + self.n_scales].permute(2,0,1,3,4)

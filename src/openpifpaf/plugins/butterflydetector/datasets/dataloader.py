@@ -20,7 +20,7 @@ from .constants import (
 
 from .uavdt import UAVDT
 from .visdrone import VisDrone
-from ..headmeta import Butterfly
+from ..headmeta import Butterfly, Butterfly_LaplaceWH
 from ..butterfly import Butterfly as ButterflyEncoder
 from .metric import AerialMetric
 
@@ -46,11 +46,16 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
 
     use_cifdet = False
     use_3classes = False
+    laplace_wh = False
 
     def __init__(self):
         super().__init__()
         if self.use_cifdet:
             cifdet = openpifpaf.headmeta.CifDet('cifdet', 'uavdt', [UAVDT_CATEGORIES[0]] if not self.use_3classes else UAVDT_CATEGORIES)
+        elif self.laplace_wh:
+            cifdet = Butterfly_LaplaceWH('butterfly_laplacewh', 'uavdt',
+                              keypoints=UAVDT_KEYPOINTS if not self.use_3classes else UAVDT_KEYPOINTS_3CATEGORIES,
+                              categories=UAVDT_CATEGORIES)
         else:
             cifdet = Butterfly('butterfly', 'uavdt',
                               keypoints=UAVDT_KEYPOINTS if not self.use_3classes else UAVDT_KEYPOINTS_3CATEGORIES,
@@ -103,6 +108,9 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
         group.add_argument('--uavdt-3classes',
                            default=False, action='store_true',
                            help='Train to predict the 3 UAVDT classes')
+        group.add_argument('--uavdt-laplacewh',
+                           default=False, action='store_true',
+                           help='Train WH using laplace')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
@@ -128,6 +136,7 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
 
         cls.use_cifdet = args.uavdt_cifdet
         cls.use_3classes = args.uavdt_3classes
+        cls.laplace_wh = args.uavdt_laplacewh
 
     def _preprocess(self):
         # enc = ButterflyEncoder(self.head_metas[0])
@@ -266,11 +275,16 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
     eval_annotation_filter = True
 
     use_cifdet = False
+    laplace_wh = False
 
     def __init__(self):
         super().__init__()
         if self.use_cifdet:
             cifdet = openpifpaf.headmeta.CifDet('cifdet', 'visdrone', VISDRONE_CATEGORIES)
+        elif self.laplace_wh:
+            cifdet = Butterfly_LaplaceWH('butterfly_laplacewh', 'visdrone',
+                              keypoints=VISDRONE_KEYPOINTS,
+                              categories=VISDRONE_CATEGORIES)
         else:
             cifdet = Butterfly('butterfly', 'visdrone',
                               keypoints=VISDRONE_KEYPOINTS,
@@ -320,6 +334,9 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
         group.add_argument('--visdrone-cifdet',
                            default=False, action='store_true',
                            help='Use CifDet head and encoder')
+        group.add_argument('--visdrone-laplacewh',
+                           default=False, action='store_true',
+                           help='Train WH using laplace')
 
     @classmethod
     def configure(cls, args: argparse.Namespace):
@@ -344,6 +361,7 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
         cls.eval_annotation_filter = args.coco_eval_annotation_filter
 
         cls.use_cifdet = args.visdrone_cifdet
+        cls.laplace_wh = args.visdrone_laplacewh
 
     def _preprocess(self):
         # enc = ButterflyEncoder(self.head_metas[0])
