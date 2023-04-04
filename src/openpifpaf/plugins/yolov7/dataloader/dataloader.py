@@ -9,6 +9,7 @@ from .dataset import LoadImagesAndLabels
 from ..butterflyencoder.butterfly import Butterfly as ButterflyEncoder
 from ..butterflyencoder.headmeta import Butterfly
 from ...butterflydetector.datasets.metric import AerialMetric
+from ..newDetector import headmeta, encoder
 
 class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -28,6 +29,8 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     singleclass = False
     largest_interval = 64
 
+    use_bf2 = False
+
     def __init__(self):
         super().__init__()
         check_dataset(self.data_dict)
@@ -35,6 +38,9 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
         if not self.fpn > 1:
             if self.use_cifdet:
                 cifdet = openpifpaf.headmeta.CifDet('cifdet', 'yolov7data', self.data_dict['names'] if not self.single_cls else ['vehicle'])
+            elif self.use_bf2:
+                cifdet = headmeta.Butterfly2('butterfly2', 'yolov7data',
+                                categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
             else:
                 cifdet = Butterfly('butterfly', 'yolov7data',
                                 categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
@@ -46,6 +52,9 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
                 if self.use_cifdet:
                     cifdet = openpifpaf.headmeta.CifDet('cifdet_fpn'+str(indx), 'yolov7data',
                                     self.data_dict['names'] if not self.single_cls else ['vehicle'])
+                elif self.use_bf2:
+                    cifdet = headmeta.Butterfly2('butterfly2_fpn'+str(indx), 'yolov7data',
+                                    categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
                 else:
                     cifdet = Butterfly('butterfly_fpn'+str(indx), 'yolov7data',
                                     categories=self.data_dict['names'] if not self.single_cls else ['vehicle'])
@@ -99,6 +108,11 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
                            default=cls.largest_interval, type=int,
                            help='Scale of targets for last layer')
 
+        # Add BF2 support
+        group.add_argument('--yolov7-bf2',
+                           default=False, action='store_true',
+                           help='Use Butterfly2 head and encoder')
+
     @classmethod
     def configure(cls, args: argparse.Namespace):
         # extract global information
@@ -124,6 +138,7 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
         cls.fpn = args.yolov7_fpn
         cls.fpn_relative_strides = args.yolov7_fpn_relative_strides
         cls.largest_interval = args.yolov7_fpn_largest_interval
+        cls.use_bf2 = args.yolov7_bf2
 
     # def _preprocess(self):
     #     enc = openpifpaf.encoder.CifDet(self.head_metas[0])
@@ -173,6 +188,8 @@ class Yolov7DataLoader(openpifpaf.datasets.DataModule):
         for head_meta in self.head_metas:
             if self.use_cifdet:
                 enc.append(openpifpaf.encoder.CifDet(head_meta))
+            elif self.use_bf2:
+                enc.append(encoder.Butterfly2(head_meta))
             else:
                 enc.append(ButterflyEncoder(head_meta))
         # enc = openpifpaf.encoder.CifDet(self.head_metas[0])
