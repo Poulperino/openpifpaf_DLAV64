@@ -71,7 +71,7 @@ class ComboIOUL1(torch.nn.Module):
 
         ciou_loss = (1 - self._ciou(x_regs, t_regs))
         ciou_loss = ciou_loss #/ (t_regs.shape[0] + 1e-4)
-        return self.lambdas[0]*d, self.lambdas[1]*ciou_loss.unsqueeze(-1)
+        return self.lambdas[0]*d + self.lambdas[1]*ciou_loss.unsqueeze(-1)
 
 class FocalLoss(torch.nn.Module):
     def __init__(self, alpha=0.25, gamma=2, eps=1e-7):
@@ -148,19 +148,19 @@ class BF2Loss(torch.nn.Module):
         LOG.debug('%s: n_vectors = %d, n_scales = %d',
                   head_meta.name, self.n_vectors, self.n_scales)
 
-        if self.regression_loss == 'iou_l1':
-            self.field_names = (
-                '{}.{}.c'.format(head_meta.dataset, head_meta.name),
-                '{}.{}.vec'.format(head_meta.dataset, head_meta.name),
-                '{}.{}.iou'.format(head_meta.dataset, head_meta.name),
-                '{}.{}.scales'.format(head_meta.dataset, head_meta.name),
-            )
-        else:
-            self.field_names = (
-                '{}.{}.c'.format(head_meta.dataset, head_meta.name),
-                '{}.{}.vec'.format(head_meta.dataset, head_meta.name),
-                '{}.{}.scales'.format(head_meta.dataset, head_meta.name),
-            )
+        # if self.regression_loss == 'iou_l1':
+        #     self.field_names = (
+        #         '{}.{}.c'.format(head_meta.dataset, head_meta.name),
+        #         '{}.{}.vec'.format(head_meta.dataset, head_meta.name),
+        #         '{}.{}.iou'.format(head_meta.dataset, head_meta.name),
+        #         '{}.{}.scales'.format(head_meta.dataset, head_meta.name),
+        #     )
+        # else:
+        self.field_names = (
+            '{}.{}.c'.format(head_meta.dataset, head_meta.name),
+            '{}.{}.vec'.format(head_meta.dataset, head_meta.name),
+            '{}.{}.scales'.format(head_meta.dataset, head_meta.name),
+        )
 
 
         # self.bce_loss = components.Bce()
@@ -279,15 +279,16 @@ class BF2Loss(torch.nn.Module):
             index_fields = index_fields[reg_mask]
             x_regs[:, 0:2] = index_fields + x_regs[:, 0:2]
             t_regs[:, 0:2] = index_fields + t_regs[:, 0:2]
-            l_reg_l1, l_reg_iou = self.reg_loss(x_regs, t_regs)
-            l_reg = l_reg_l1 + l_reg_iou
+            # l_reg = self.reg_loss(x_regs, t_regs)
+            # l_reg = l_reg_l1 + l_reg_iou
         # l_reg = self.reg_loss(x_regs, t_regs, t_sigma_min, t_scales_reg)
         # l_scale = self.scale_loss(x_scales, t_scales)
-        else:
-            l_reg = self.reg_loss(x_regs, t_regs)
+        # else:
+        l_reg = self.reg_loss(x_regs, t_regs)
         l_reg = torch.sum(l_reg) / reg_mask.sum()
         l_scale = self.scale_loss(x_scales, t_scales)
         l_scale = torch.sum(l_scale) / scale_mask.sum()
+
         # # softclamp
         # if self.soft_clamp is not None:
         #     l_confidence_bg = self.soft_clamp(l_confidence_bg)
@@ -327,19 +328,19 @@ class BF2Loss(torch.nn.Module):
         #     l_reg = full_weights.unsqueeze(-1)[reg_mask] * l_reg
         #     l_scale = full_weights[scale_mask] * l_scale
 
-        if self.regression_loss == 'iou_l1':
-            losses = [
-                l_ce,
-                torch.sum(l_reg_l1) / reg_mask.sum(),
-                torch.sum(l_reg_iou) / reg_mask.sum(),
-                l_scale,
-            ]
-        else:
-            losses = [
-                l_ce,
-                l_reg,
-                l_scale,
-            ]
+        # if self.regression_loss == 'iou_l1':
+        #     losses = [
+        #         l_ce,
+        #         torch.sum(l_reg_l1) / reg_mask.sum(),
+        #         torch.sum(l_reg_iou) / reg_mask.sum(),
+        #         l_scale,
+        #     ]
+        # else:
+        losses = [
+            l_ce,
+            l_reg,
+            l_scale,
+        ]
 
         if not all(torch.isfinite(l).item() if l is not None else True for l in losses):
             raise Exception('found a loss that is not finite: {}, prev: {}'

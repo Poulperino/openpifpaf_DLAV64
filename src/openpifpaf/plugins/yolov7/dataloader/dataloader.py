@@ -9,7 +9,7 @@ from .dataset import LoadImagesAndLabels
 from ..butterflyencoder.butterfly import Butterfly as ButterflyEncoder
 from ..butterflyencoder.headmeta import Butterfly
 from ...butterflydetector.datasets.metric import AerialMetric
-from ..newDetector import headmeta, encoder
+from ...butterfly2 import headmeta, encoder
 
 class Yolov7DataLoader(openpifpaf.datasets.DataModule):
     # cli configurable

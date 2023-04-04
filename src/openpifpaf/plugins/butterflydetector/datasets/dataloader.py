@@ -23,6 +23,7 @@ from .visdrone import VisDrone
 from ..headmeta import Butterfly, Butterfly_LaplaceWH
 from ..butterfly import Butterfly as ButterflyEncoder
 from .metric import AerialMetric
+from ...butterfly2 import headmeta, encoder
 
 class UAVDTDataLoader(openpifpaf.datasets.DataModule):
     # cli configurable
@@ -47,6 +48,7 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
     use_cifdet = False
     use_3classes = False
     laplace_wh = False
+    use_bf2 = False
 
     def __init__(self):
         super().__init__()
@@ -56,6 +58,9 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
             cifdet = Butterfly_LaplaceWH('butterfly_laplacewh', 'uavdt',
                               keypoints=UAVDT_KEYPOINTS if not self.use_3classes else UAVDT_KEYPOINTS_3CATEGORIES,
                               categories=UAVDT_CATEGORIES)
+        elif self.use_bf2:
+            cifdet = headmeta.Butterfly2('butterfly2', 'uavdt',
+                            categories=[UAVDT_CATEGORIES[0]] if not self.use_3classes else UAVDT_CATEGORIES)
         else:
             cifdet = Butterfly('butterfly', 'uavdt',
                               keypoints=UAVDT_KEYPOINTS if not self.use_3classes else UAVDT_KEYPOINTS_3CATEGORIES,
@@ -112,6 +117,11 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
                            default=False, action='store_true',
                            help='Train WH using laplace')
 
+        # Add BF2 support
+        group.add_argument('--uavdt-bf2',
+                           default=False, action='store_true',
+                           help='Use Butterfly2 head and encoder')
+
     @classmethod
     def configure(cls, args: argparse.Namespace):
         # extract global information
@@ -137,11 +147,14 @@ class UAVDTDataLoader(openpifpaf.datasets.DataModule):
         cls.use_cifdet = args.uavdt_cifdet
         cls.use_3classes = args.uavdt_3classes
         cls.laplace_wh = args.uavdt_laplacewh
+        cls.use_bf2 = args.uavdt_bf2
 
     def _preprocess(self):
         # enc = ButterflyEncoder(self.head_metas[0])
         if self.use_cifdet:
             enc = openpifpaf.encoder.CifDet(self.head_metas[0])
+        elif self.use_bf2:
+            enc = encoder.Butterfly2(self.head_metas[0])
         else:
             enc = ButterflyEncoder(self.head_metas[0])
         if self.augmentation:
@@ -276,6 +289,7 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
 
     use_cifdet = False
     laplace_wh = False
+    use_bf2 = False
 
     def __init__(self):
         super().__init__()
@@ -285,6 +299,9 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
             cifdet = Butterfly_LaplaceWH('butterfly_laplacewh', 'visdrone',
                               keypoints=VISDRONE_KEYPOINTS,
                               categories=VISDRONE_CATEGORIES)
+        elif self.use_bf2:
+            cifdet = headmeta.Butterfly2('butterfly2', 'visdrone',
+                            categories= VISDRONE_CATEGORIES)
         else:
             cifdet = Butterfly('butterfly', 'visdrone',
                               keypoints=VISDRONE_KEYPOINTS,
@@ -338,6 +355,11 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
                            default=False, action='store_true',
                            help='Train WH using laplace')
 
+        # Add BF2 support
+        group.add_argument('--visdrone-bf2',
+                           default=False, action='store_true',
+                           help='Use Butterfly2 head and encoder')
+
     @classmethod
     def configure(cls, args: argparse.Namespace):
         # extract global information
@@ -362,11 +384,14 @@ class VisdroneDataLoader(openpifpaf.datasets.DataModule):
 
         cls.use_cifdet = args.visdrone_cifdet
         cls.laplace_wh = args.visdrone_laplacewh
+        cls.use_bf2 = args.visdrone_bf2
 
     def _preprocess(self):
         # enc = ButterflyEncoder(self.head_metas[0])
         if self.use_cifdet:
             enc = openpifpaf.encoder.CifDet(self.head_metas[0])
+        elif self.use_bf2:
+            enc = encoder.Butterfly2(self.head_metas[0])
         else:
             enc = ButterflyEncoder(self.head_metas[0])
         if self.augmentation:

@@ -4,8 +4,8 @@ from .dataloader.dataloader import Yolov7DataLoader
 from .model.yolo import Model
 from .butterflyencoder import headmeta
 from ..butterflydetector import CompositeField, CompositeLoss
-from .newDetector import headmeta as headmeta2
-from .newDetector import Butterfly2Head, BF2Loss
+from ..butterfly2 import headmeta as headmeta2
+from ..butterfly2 import Butterfly2Head, BF2Loss
 
 def register():
     openpifpaf.DATAMODULES['yolov7data'] = Yolov7DataLoader
