@@ -25,7 +25,7 @@ class Butterfly:
     bmin: float = 1.0  #: in pixels
     visualizer: CifDetVisualizer = None
 
-    side_length: ClassVar[int] = 4
+    side_length: ClassVar[int] = -2
     padding: ClassVar[int] = 10
 
     obutterfly: bool = False
@@ -169,6 +169,79 @@ class ButterflyGenerator():
         self.fields_width[f, miny:maxy, minx:maxx][mask] = np.log(width)
         self.fields_height[f, miny:maxy, minx:maxx][mask] = np.log(height)
 
+    def fill_coordinate_max4(self, f, kps, width, height, scale):
+        '''
+        Use a 4x4 field with ignore region surrounding it.
+        '''
+        xy_offset = [-0.5, -0.5]
+        #xy_offset = [0, 0]
+        minx, miny = np.min(kps[kps[:,2]>0, 0]), np.min(kps[kps[:,2]>0, 1])
+        maxx, maxy = np.max(kps[kps[:,2]>0, 0]), np.max(kps[kps[:,2]>0, 1])
+        #w = np.round(w - xy_offset[0]).astype(np.int)
+        #h = np.round(h - xy_offset[1]).astype(np.int)
+        w = np.round(maxx - minx + 0.5).astype(np.int)
+
+        h = np.round(maxy- miny + 0.5).astype(np.int)
+
+        xyv = kps[-1]
+
+        xy_offset = [(4 - 1.0) / 2.0, (4 - 1.0) / 2.0]
+
+        ij = np.round(xyv[:2] - xy_offset).astype(np.int) + self.config.padding
+        offset = xyv[:2] - (ij + xy_offset - self.config.padding)
+        minx, miny = int(ij[0]), int(ij[1])
+        maxx, maxy = minx + 4, miny + 4
+
+        if minx + 2 < 0 or maxx - 2 > self.intensities.shape[2] or \
+           miny + 2 < 0 or maxy - 2 > self.intensities.shape[1]:
+            return
+
+        if w > 16 or h>16:
+            sigma_ignore, sigma_eff = 0.5, 0.2
+            w_ignore, h_ignore = np.round(sigma_ignore*w + 0.5).astype(np.int), np.round(sigma_ignore*h+ 0.5).astype(np.int)
+            xy_offset = [(w_ignore - 1.0) / 2.0, (h_ignore - 1.0) / 2.0]
+            ij = np.round(xyv[:2] - xy_offset).astype(np.int) + self.config.padding
+            if w>16:
+                minx_ignore = int(ij[0])
+            else:
+                minx_ignore = minx
+                w_ignore = 4
+            if h>16:
+                miny_ignore = int(ij[1])
+            else:
+                miny_ignore = miny
+                h_ignore = 4
+            maxx_ignore, maxy_ignore = minx_ignore + w_ignore, miny_ignore + h_ignore
+            self.intensities[f, miny_ignore:maxy_ignore, minx_ignore:maxx_ignore] = np.nan
+        w = 4
+        h = 4
+
+        sink = create_sink_2d(w, h)
+
+        minx_n = max(0, minx)
+        miny_n = max(0, miny)
+        maxx_n = min(maxx, self.intensities.shape[2])
+        maxy_n = min(maxy, self.intensities.shape[1])
+        sink = sink[:, (miny_n-miny):(miny_n-miny) + (maxy_n-miny_n), (minx_n-minx):(minx_n-minx) + (maxx_n-minx_n)]
+        minx = minx_n
+        maxx = maxx_n
+        miny = miny_n
+        maxy = maxy_n
+        offset = offset.reshape(2, 1, 1)
+
+        # update intensity
+        self.intensities[f, miny:maxy, minx:maxx] = 1.0
+        # update regression
+        sink_reg = sink + offset
+        sink_l = np.linalg.norm(sink_reg, axis=0)
+        mask = sink_l < self.fields_reg_l[f, miny:maxy, minx:maxx]
+        self.fields_reg[f, :, miny:maxy, minx:maxx][:, mask] = \
+            sink_reg[:, mask]
+        self.fields_reg_l[f, miny:maxy, minx:maxx][mask] = sink_l[mask]
+
+        # update scale
+        self.fields_width[f, miny:maxy, minx:maxx][mask] = np.log(width)
+        self.fields_height[f, miny:maxy, minx:maxx][mask] = np.log(height)
 
     def fields(self, valid_area):
         intensities = self.intensities[:, self.config.padding:-self.config.padding, self.config.padding:-self.config.padding]

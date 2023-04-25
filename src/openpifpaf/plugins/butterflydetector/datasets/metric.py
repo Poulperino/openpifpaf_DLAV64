@@ -42,7 +42,7 @@ class AerialMetric:
                 if self.dataset == "visdrone":
                     self.dict_folder[folder].append(",".join(list(map(str,[x, y, w, h, s, categ, -1, -1]))))
                 elif self.dataset == "uavdt":
-                    self.dict_folder[folder].append(",".join(list(map(str,[image_numb, -1, x, y, w, h, s, 1, categ - 1]))))
+                    self.dict_folder[folder].append(",".join(list(map(str,[image_numb, -1, x, y, w, h, s, 1, categ]))))
 
         if len(self.dict_folder[folder])==0:
             self.dict_folder[folder].append(",".join(list(map(str,[0, 0, 0, 0, 0, 0, -1, -1]))))
