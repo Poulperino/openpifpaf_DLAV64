@@ -127,7 +127,7 @@ setuptools.setup(
         ],
         'train': [
             'matplotlib>=3.3',  # required by pycocotools
-            'pycocotools>=2.0.1,!=2.0.5,!=2.0.6',  # pre-install cython (currently incompatible with numpy 1.18 or above)
+            'pycocotools@git+https://github.com/ppwwyyxx/cocoapi.git#subdirectory=PythonAPI',  # pre-install cython, last version fixing compilation not on pypi
             'scipy',
             'xtcocotools>=1.5; sys_platform == "linux"',  # pre-install numpy. required for wholebody eval, only wheels and only for linux on pypi
         ],
